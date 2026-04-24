@@ -1,0 +1,6658 @@
+scalar Date
+scalar DateTime
+scalar Long
+scalar JSON
+scalar UUID
+scalar ACM
+scalar Preferences
+scalar GeoJSON
+
+type Query {
+    # ************************************************
+    # ********************* MISC *********************
+    # ************************************************
+
+    "Send a test request to the server"
+    greeting: String
+
+    # ************************************************
+    # ******************** AUDIT *********************
+    # ************************************************
+
+    "Get the audit event with the given ID"
+    audit(query: IdQuery!): AuditLog
+
+    "Get the audit events that match the given query"
+    audits(query: AuditQuery!): AuditLogPage!
+
+    # ************************************************
+    # ****************** ORIGINATOR ******************
+    # ************************************************
+
+    "Get the originator with the given ID"
+    originator(query: IdQuery!): Originator
+
+    "Get the originators for the given query"
+    originators(query: OriginatorQuery!): OriginatorPage!
+
+    "Get the originator history for the given query"
+    originatorHistory(query: HistoryQuery!): OriginatorPage!
+
+    # ************************************************
+    # ******************* PROVIDER *******************
+    # ************************************************
+
+    "Get the provider with the given ID"
+    provider(query: IdQuery!): Provider
+
+    "Get the providers for the given query"
+    providers(query: ProviderQuery!): ProviderPage!
+
+    "Get the provider history for the given query"
+    providerHistory(query: HistoryQuery!): ProviderPage!
+
+    # ************************************************
+    # ******************** SOURCE ********************
+    # ************************************************
+    "Get the source with the given ID"
+    source(query: IdQuery!): Source
+
+    "Get the sources for the given query"
+    sources(query: SourceQuery!): SourcePage!
+
+    "Get the source history for the given query"
+    sourceHistory(query: HistoryQuery!): SourcePage!
+
+    # ************************************************
+    # ********************* NODE *********************
+    # ************************************************
+
+    "Get the node with the given ID"
+    node(query: IdQuery!): Node
+
+    "Get the nodes for the given query"
+    nodes(query: NodeQuery!): NodePage!
+
+    "Get the node history for the given query"
+    nodeHistory(query: HistoryQuery!): NodePage!
+
+    # ************************************************
+    # ******************* ATTRIBUTE ******************
+    # ************************************************
+
+    "Get the attribute with the given ID"
+    attribute(query: IdQuery!): Attribute
+
+    "Get the attributes for the given query"
+    attributes(query: AttributeQuery!): AttributePage!
+
+    "Get the attribute history for the given query"
+    attributeHistory(query: HistoryQuery!): AttributePage!
+
+    # ************************************************
+    # ****************** OBSERVATION *****************
+    # ************************************************
+
+    "Get the observation with the given ID"
+    observation(query: IdQuery!): Observation
+
+    "Get the observations for the given query"
+    observations(query: ObservationQuery!): ObservationPage!
+
+    "Get the observation history for the given query"
+    observationHistory(query: HistoryQuery!): ObservationPage!
+
+    # ************************************************
+    # ******************* ACTIVITY *******************
+    # ************************************************
+
+    "Get the activity with the given ID"
+    activity(query: IdQuery!): Activity
+
+    "Get the activities for the given query"
+    activities(query: ActivityQuery!): ActivityPage!
+
+    "Get the activity history for the given query"
+    activityHistory(query: HistoryQuery!): ActivityPage!
+
+    # ************************************************
+    # ***************** RELATIONSHIP *****************
+    # ************************************************
+
+    "Get the relationship with the given ID"
+    relationship(query: IdQuery!): Relationship
+
+    "Get the relationships for the given query"
+    relationships(query: RelationshipQuery!): RelationshipPage!
+
+    "Get the relationship history for the given query"
+    relationshipHistory(query: HistoryQuery!): RelationshipPage!
+
+    # ************************************************
+    # ******************* COMMENT ********************
+    # ************************************************
+
+    "Get the comment with the given ID"
+    comment(query: IdQuery!): Comment
+
+    "Get the comments for the given query"
+    comments(query: CommentQuery!): CommentPage!
+
+    "Get the comment history for the given query"
+    commentHistory(query: HistoryQuery!): CommentPage!
+
+    # ************************************************
+    # ****************** ASSESSMENT ******************
+    # ************************************************
+
+    "Get the assessment with the given ID"
+    assessment(query: IdQuery!): Assessment
+
+    "Get the assessments for the given query"
+    assessments(query: AssessmentQuery!): AssessmentPage!
+
+    "Get the assessment history for the given query"
+    assessmentHistory(query: HistoryQuery!): AssessmentPage!
+
+    # ************************************************
+    # **************** NOTIFICATIONS *****************
+    # ************************************************
+
+    "Get the notification with the given ID"
+    notification(query: IdQuery!): Notification
+
+    "Get the notifications for the given query"
+    notifications(query: NotificationQuery!): NotificationPage!
+
+    "Get the notification history for the given query"
+    notificationHistory(query: HistoryQuery!): NotificationPage!
+
+    # ************************************************
+    # ******************* ONTOLOGY *******************
+    # ************************************************
+
+    "Get the ontology class with the given IRI"
+    ontologyClass(query: IriQuery!): OntologyClass
+
+    "Find ontology classes with the given query- name will search on both name and aliases"
+    ontologyClasses(query: OntologyClassQuery!): OntologyClassPage!
+
+    "Get the ontology attribute with the given IRI"
+    ontologyAttribute(query: IriQuery!): OntologyAttribute
+
+    "Find ontology attributes with the given query"
+    ontologyAttributes(query: OntologyQuery!): OntologyAttributePage!
+
+    "Get the ontology relationship with the given IRI"
+    ontologyRelationship(query: IriQuery!): OntologyRelationship
+
+    "Find ontology relationships with the given query"
+    ontologyRelationships(query: OntologyQuery!): OntologyRelationshipPage!
+
+    "Returns true if the given resourceIri is for a valid loaded ontology"
+    isValidOntologyResource(input: IsValidOntologyResourceInput!): Boolean
+
+    "Returns a list of all valid countries"
+    getAllCountries: [CountryInfo!]!
+
+    "Returns a list of all valid COCOMs"
+    getAllCocoms: [String!]!
+
+    # ************************************************
+    # ******************** ROLES *********************
+    # ************************************************
+
+    "Get the roles per cocom for the user"
+    getRolesForCurrentUser: [UserRole!]!
+
+    # ************************************************
+    # ******************* GROUPS *********************
+    # ************************************************
+
+    "Get the ATOMS groups"
+    groups: [OmsGroup!]!
+
+    # ************************************************
+    # ****************** USER METRICS ****************
+    # ************************************************
+
+    "Get the user metrics with the given ID"
+    userMetric(query: IdQuery!): UserMetric
+
+    "Get the user metrics that match the given query"
+    userMetrics(query: UserMetricQuery!): UserMetricPage!
+
+    # ************************************************
+    # *************** COLLECTION STATUS **************
+    # ************************************************
+
+    "get the collection status for a given originator ID"
+    originatorStatus(query: OriginatorStatusQuery!): OriginatorCollectionStatus
+
+    "get the collection status for a given provider ID"
+    providerStatus(query: ProviderStatusQuery!): ProviderCollectionStatus
+
+    "return a full list of all tracked originators and their provider statuses"
+    collectionStatusReport: CollectionStatusReport
+
+    # ************************************************
+    # *************** OBJECT LIST **************
+    # ************************************************
+
+    "Get the object list with the given ID"
+    objectList(query: IdQuery!): ObjectList
+
+    "Get the object list for the given query"
+    objectLists(query: ObjectListQuery!): ObjectListPage!
+
+    "Get the object list history for the given query"
+    objectListHistory(query: HistoryQuery!): ObjectListPage!
+
+    # ************************************************
+    # ***************** NODE CHANGES *****************
+    # ************************************************
+
+    "Get the node changes for the given query"
+    nodeChanges(query: NodeChangeQuery!): NodeChangePage!
+
+    # ************************************************
+    # *************** USER PREFERENCES ***************
+    # ************************************************
+
+    "Get the user preferences for a given query"
+    userPreferences(query: UserPreferencesQuery!): UserPreferences
+
+    "Get the user preferences by IdQuery"
+    userPreferencesById(query: IdQuery!): UserPreferences
+
+    "Get the user preferences history for the given query"
+    userPreferencesHistory(query: HistoryQuery!): UserPreferencesPage!
+
+    # ************************************************
+    # **************** BASEBALL CARD *****************
+    # ************************************************
+
+    "Get the baseball card with the given ID"
+    baseballCard(query: IdQuery!): BaseballCard
+
+    "Get the baseball cards for the given query"
+    baseballCards(query: BaseballCardQuery!): BaseballCardPage!
+
+    "Get the baseball card history for the given query"
+    baseballCardHistory(query: HistoryQuery!): BaseballCardPage!
+
+    # ************************************************
+    # ***************** EOID RECORD ******************
+    # ************************************************
+
+    "Get the EOID record with the given ID or EOID"
+    eoidRecord(query: EoidRecordIdQuery!): EoidRecord
+
+    "Get the EOID records for the given query"
+    eoidRecords(query: EoidRecordQuery!): EoidRecordPage!
+
+    # ************************************************
+    # ************** EMAIL SUBSCRIPTION **************
+    # ************************************************
+
+    "Get the email subscription with the given ID"
+    emailSubscription(query: IdQuery!): EmailSubscription
+
+    "Get the email subscriptions for the given query"
+    emailSubscriptions(query: EmailSubscriptionQuery!): EmailSubscriptionPage!
+
+    "Get the email subscription history for the given query"
+    emailSubscriptionHistory(query: HistoryQuery!): EmailSubscriptionPage!
+
+    # ************************************************
+    # **************** ATOMS CONFIG ******************
+    # ************************************************
+
+    "Get the full list of valid activity states"
+    activityStates: [String!]!
+
+    # ************************************************
+    # ************* COLLECTION LATENCY ***************
+    # ************************************************
+
+    "Get collection latency metrics with the given hours back and number of bins to query"
+    collectionLatencyStats(query: CollectionLatencyStatsQuery!): CollectionLatencyStats
+
+    # ************************************************
+    # ************* ALERT SUBSCRIPTIONS **************
+    # ************************************************
+
+    "Get the alert subscription with the given ID"
+    alertSubscription(query: IdQuery!): AlertSubscription
+
+    "Get the alert subscriptions for the given query"
+    alertSubscriptions(query: AlertSubscriptionQuery!): AlertSubscriptionPage!
+
+    "Get the alert subscription history for the given query"
+    alertSubscriptionHistory(query: HistoryQuery!): AlertSubscriptionPage!
+
+    # ************************************************
+    # ******************* ALERTS *********************
+    # ************************************************
+
+    "Get all alerts for the user"
+    alerts(query: AlertQuery!): AlertPage!
+
+    # ************************************************
+    # ******************* TICKET *********************
+    # ************************************************
+
+    "Get the ticket with the given ID"
+    ticket(query: IdQuery!): Ticket
+
+    "Get the tickets for the given query"
+    tickets(query: TicketQuery!): TicketPage!
+
+    "Get the ticket history for the given query"
+    ticketHistory(query: HistoryQuery!): TicketPage!
+
+    # ************************************************
+    # ******************* PROJECT ********************
+    # ************************************************
+
+    "Get the project with the given ID"
+    project(query: IdQuery!): Project
+
+    "Get the projects for the given query"
+    projects(query: ProjectQuery!): ProjectPage!
+
+    "Get the project history for the given query"
+    projectHistory(query: HistoryQuery!): ProjectPage!
+}
+
+type Mutation {
+    # ************************************************
+    # ****************** ORIGINATOR ******************
+    # ************************************************
+
+    "Create an originator"
+    createOriginator(input: CreateOriginatorInput!): Originator
+
+    "Update an originator"
+    updateOriginator(input: UpdateOriginatorInput!): Originator
+
+    "Sync the originator data with the given input (usage restricted to DDIL)"
+    syncOriginator(input: SyncOriginatorInput!): Originator
+
+    "Delete an originator"
+    deleteOriginator(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted originator"
+    restoreOriginator(input: RestoreInput!): Originator
+
+    # ************************************************
+    # ******************* PROVIDER *******************
+    # ************************************************
+
+    "Create a provider"
+    createProvider(input: CreateProviderInput!): Provider
+
+    "Update a provider"
+    updateProvider(input: UpdateProviderInput!): Provider
+
+    "Sync the provider data with the given input (usage restricted to DDIL)"
+    syncProvider(input: SyncProviderInput!): Provider
+
+    "Delete a provider"
+    deleteProvider(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted provider"
+    restoreProvider(input: RestoreInput!): Provider
+
+
+    # ************************************************
+    # ******************** SOURCE ********************
+    # ************************************************
+
+    "Create a source"
+    createSource(input: CreateSourceInput!): Source
+
+    "Update a source"
+    updateSource(input: UpdateSourceInput!): Source
+
+    "Sync the source data with the given input (usage restricted to DDIL)"
+    syncSource(input: SyncSourceInput!): Source
+
+    "Delete a source"
+    deleteSource(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted source"
+    restoreSource(input: RestoreInput!): Source
+
+    "Verify an existing source"
+    verifySource(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ********************* NODE *********************
+    # ************************************************
+
+    "Create a node"
+    createNode(input: CreateNodeInput!): Node
+
+    "Update a node"
+    updateNode(input: UpdateNodeInput!): Node
+
+    "Sync the node data with the given input (usage restricted to DDIL)"
+    syncNode(input: SyncNodeInput!): Node
+
+    "Delete a node"
+    deleteNode(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted node"
+    restoreNode(input: RestoreInput!): Node
+
+    "Verify an existing node"
+    verifyNode(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ******************* ATTRIBUTE ******************
+    # ************************************************
+
+    "Create an attribute"
+    createAttribute(input: CreateAttributeInput!): Attribute
+
+    "Update an attribute"
+    updateAttribute(input: UpdateAttributeInput!): Attribute
+
+    "Sync the attribute data with the given input (usage restricted to DDIL)"
+    syncAttribute(input: SyncAttributeInput!): Attribute
+
+    "Delete an attribute"
+    deleteAttribute(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted attribute"
+    restoreAttribute(input: RestoreInput!): Attribute
+
+    "Verify an existing attribute"
+    verifyAttribute(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ****************** OBSERVATION *****************
+    # ************************************************
+
+    "Create an observation"
+    createObservation(input: CreateObservationInput!): Observation
+
+    "Update an observation"
+    updateObservation(input: UpdateObservationInput!): Observation
+
+    "Sync the observation data with the given input (usage restricted to DDIL)"
+    syncObservation(input: SyncObservationInput!): Observation
+
+    "Delete an observation"
+    deleteObservation(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted observation"
+    restoreObservation(input: RestoreInput!): Observation
+
+    "Verify an existing observation"
+    verifyObservation(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ******************* ACTIVITY *******************
+    # ************************************************
+
+    "Create an activity"
+    createActivity(input: CreateActivityInput!): Activity
+
+    "Update an activity"
+    updateActivity(input: UpdateActivityInput!): Activity
+
+    "Sync the activity data with the given input (usage restricted to DDIL)"
+    syncActivity(input: SyncActivityInput!): Activity
+
+    "Delete an activity"
+    deleteActivity(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted activity"
+    restoreActivity(input: RestoreInput!): Activity
+
+    "Verify an existing activity"
+    verifyActivity(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ***************** RELATIONSHIP *****************
+    # ************************************************
+
+    "Create a relationship between two nodes"
+    createRelationship(input: CreateRelationshipInput!): Relationship
+
+    "Update a relationship"
+    updateRelationship(input: UpdateRelationshipInput!): Relationship
+
+    "Sync the relationship data with the given input (usage restricted to DDIL)"
+    syncRelationship(input: SyncRelationshipInput!): Relationship
+
+    "Delete a relationship"
+    deleteRelationship(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted relationship"
+    restoreRelationship(input: RestoreInput!): Relationship
+
+    "Verify an existing relationship"
+    verifyRelationship(input: VerifyInput!): Boolean!
+
+    # ************************************************
+    # ******************* COMMENT ********************
+    # ************************************************
+
+    "Create a new comment on a data object"
+    createComment(input: CreateCommentInput!): Comment
+
+    "Update an existing comment that belongs to the requesting user"
+    updateComment(input: UpdateCommentInput!): Comment
+
+    "Sync the comment data with the given input (usage restricted to DDIL)"
+    syncComment(input: SyncCommentInput!): Comment
+
+    "Delete a comment that belongs to the requesting user"
+    deleteComment(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted comment"
+    restoreComment(input: RestoreInput!): Comment
+
+    # ************************************************
+    # ****************** ASSESSMENT ******************
+    # ************************************************
+
+    "Create a new assessment"
+    createAssessment(input: CreateAssessmentInput!): Assessment
+
+    "Update an existing assessment"
+    updateAssessment(input: UpdateAssessmentInput!): Assessment
+
+    "Sync the assessment data with the given input (DDIL usage)"
+    syncAssessment(input: syncAssessmentInput!): Assessment
+
+    "Delete an existing assessment"
+    deleteAssessment(input: DeleteByIdInput!): Boolean
+
+    "Restore a deleted assessment"
+    restoreAssessment(input: RestoreInput!): Assessment
+
+    # ************************************************
+    # **************** NOTIFICATIONS *****************
+    # ************************************************
+
+    "Create a new notification"
+    createNotification(input: CreateNotificationInput!): Notification
+
+    "Update an existing notification"
+    updateNotification(input: UpdateNotificationInput!): Notification
+
+    "Sync the notification data with the given input (usage restricted to DDIL)"
+    syncNotification(input: SyncNotificationInput!): Notification
+
+    "Delete an notification"
+    deleteNotification(input: DeleteByIdInput!): Boolean
+
+    "Restore an notification"
+    restoreNotification(input: RestoreInput!): Notification
+
+    # ************************************************
+    # ************** OBJECT LIST ***************
+    # ************************************************
+
+    "Create a new object list"
+    createObjectList(input: CreateObjectListInput!): ObjectList
+
+    "Update an existing object list"
+    updateObjectList(input: UpdateObjectListInput!): ObjectList
+
+    "Sync the object list data with the given input (usage restricted to DDIL)"
+    syncObjectList(input: SyncObjectListInput!): ObjectList
+
+    "Delete an object list"
+    deleteObjectList(input: DeleteByIdInput!): Boolean
+
+    "Restore an object list"
+    restoreObjectList(input: RestoreInput!): ObjectList
+
+    "Adjudicate queued updates to JAOL object lists and return the affected lists"
+    adjudicateJaolUpdates(input: JaolAdjudicationInput!): [ObjectList!]!
+
+    # ************************************************
+    # ************** USER PREFERENCES ****************
+    # ************************************************
+
+    "Create new user preferences"
+    createUserPreferences(input: CreateUserPreferencesInput!): UserPreferences
+
+    "Update existing user preferences"
+    updateUserPreferences(input: UpdateUserPreferencesInput!): UserPreferences
+
+    "Delete user preferences"
+    deleteUserPreferences(input: DeleteByIdInput!): Boolean
+
+    "Restore user preferences"
+    restoreUserPreferences(input: RestoreInput!): UserPreferences
+
+    # ************************************************
+    # **************** BASEBALL CARD *****************
+    # ************************************************
+
+    "Create a new baseball card"
+    createBaseballCard(input: CreateBaseballCardInput!): BaseballCard
+
+    "Update an existing baseball card"
+    updateBaseballCard(input: UpdateBaseballCardInput!): BaseballCard
+
+    "Sync the baseball card data with the given input (usage restricted to DDIL)"
+    syncBaseballCard(input: SyncBaseballCardInput!): BaseballCard
+
+    "Delete a baseball card"
+    deleteBaseballCard(input: DeleteByIdInput!): Boolean
+
+    "Restore a baseball card"
+    restoreBaseballCard(input: RestoreInput!): BaseballCard
+
+    # ************************************************
+    # ***************** EOID RECORD ******************
+    # ************************************************
+
+    "Create the next EOID in the registry for the given input"
+    createNextEoidRecord: EoidRecord
+
+    # ************************************************
+    # ************** EMAIL SUBSCRIPTION **************
+    # ************************************************
+
+    "Create a new email subscription"
+    createEmailSubscription(input: CreateEmailSubscriptionInput!): EmailSubscription
+
+    "Update an existing email subscription"
+    updateEmailSubscription(input: UpdateEmailSubscriptionInput!): EmailSubscription
+
+    "Sync the email subscription data with the given input (usage restricted to DDIL)"
+    syncEmailSubscription(input: SyncEmailSubscriptionInput!): EmailSubscription
+
+    "Delete an email subscription"
+    deleteEmailSubscription(input: DeleteByIdInput!): Boolean
+
+    "Restore an email subscription"
+    restoreEmailSubscription(input: RestoreInput!): EmailSubscription
+
+    # ************************************************
+    # ************* ALERT SUBSCRIPTIONS **************
+    # ************************************************
+
+    "Create a new alert subscription"
+    createAlertSubscription(input: CreateAlertSubscriptionInput!): AlertSubscription
+
+    "Update an existing alert subscription"
+    updateAlertSubscription(input: UpdateAlertSubscriptionInput!): AlertSubscription
+
+    "Delete a alert subscription"
+    deleteAlertSubscription(input: DeleteByIdInput!): Boolean
+
+    # ************************************************
+    # ******************* ALERTS *********************
+    # ************************************************
+
+    "Acknowledge the given alerts"
+    acknowledgeAlerts(input: AcknowledgeAlertsInput!): Boolean
+
+    # ************************************************
+    # ******************* TICKET *********************
+    # ************************************************
+
+    "Create a new ticket"
+    createTicket(input: CreateTicketInput!): Ticket
+
+    "Update an existing ticket"
+    updateTicket(input: UpdateTicketInput!): Ticket
+
+    "Sync the ticket data with the given input (usage restricted to DDIL)"
+    syncTicket(input: SyncTicketInput!): Ticket
+
+    "Delete a ticket"
+    deleteTicket(input: DeleteByIdInput!): Boolean
+
+    "Restore a ticket"
+    restoreTicket(input: RestoreInput!): Ticket
+
+    # ************************************************
+    # ******************* PROJECT ********************
+    # ************************************************
+
+    "Create a new project"
+    createProject(input: CreateProjectInput!): Project
+
+    "Update an existing project"
+    updateProject(input: UpdateProjectInput!): Project
+
+    "Sync the project data with the given input (usage restricted to DDIL)"
+    syncProject(input: SyncProjectInput!): Project
+
+    "Delete a project"
+    deleteProject(input: DeleteByIdInput!): Boolean
+
+    "Restore a project"
+    restoreProject(input: RestoreInput!): Project
+
+    # ************************************************
+    # ******************** MISC **********************
+    # ************************************************
+
+    "Merge a originator node into the target node, deleting the originator node"
+    mergeObjects(input: MergeObjectsInput!): Node
+
+    "Re-sync the given object to the ESS node index"
+    reSyncToEs(input: ReSyncToEsInput!): Boolean
+
+    "Delete all smoke test data from the system"
+    cleanUpSmokeTestData: Boolean
+
+    "Purge data by tag from the system"
+    purgeTaggedData(input: PurgeDataInput!): Boolean
+}
+
+type Subscription {
+    "Returns a stream of AuditLogs"
+    audits(input: AuditSubscription!): AuditLog!
+}
+
+# ************************************************
+# ****************** DIRECTIVES ******************
+# ************************************************
+"""
+A directive to specify that a field may be used as a sort parameter in paginated results
+"""
+directive @sortable on FIELD_DEFINITION
+
+"""
+A directive to specify the min and max values of a float
+"""
+directive @Range(
+    min: Float
+    max: Float
+) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""
+A directive to specify the combination of fields for an object that must be unique
+"""
+directive @uniqueOn(
+    "The object fields which make up the unique key"
+    fields: [String!]
+) repeatable on OBJECT
+
+"""
+A directive to specify the max length of a field
+"""
+directive @Size(
+    min: Int! = 0,
+    max: Int! = 2147483647,
+    message: String! = "graphql.validation.Size.message"
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""
+A directive to specify the max value of a Int field
+"""
+directive @Max(
+    value: Int!
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""
+A directive to specify the min value of a Int field
+"""
+directive @Min(
+    value: Int!
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"""
+A directive to not allow empty lists
+"""
+directive @ContainerNotEmpty(
+    message: String = "Must not be empty"
+) on INPUT_FIELD_DEFINITION
+
+# ************************************************
+# ****************** INTERFACES ******************
+# ************************************************
+"""
+A base object interface for ATOMS objects
+"""
+interface Auditable {
+    "The object UUID"
+    id: UUID!
+    "The object version"
+    version: Long!
+    "The object ACM"
+    acm: ACM!
+}
+
+"""
+An interface for paginated data
+"""
+interface Page {
+    "The total amount of all matching data"
+    totalSize: Long!
+    "Whether the total size has been capped at the max allowed value and the actual value is greater"
+    totalSizeExceeded: Boolean!
+    "A rollup ACM for the data list"
+    rollupAcm: ACM
+    "The data list"
+    data: [Pageable!]!
+}
+
+"""
+An interface for verifiable types
+"""
+interface Verifiable {
+    "The most recent object verification"
+    lastVerified: Verification!
+}
+
+# ************************************************
+# ******************** UNIONS ********************
+# ************************************************
+"""
+All pageable data types
+"""
+union Pageable = Originator | Provider | Source | Attribute | Relationship | Node | Comment | Notification | AuditLog |
+    UserMetric | ObjectList | NodeChange | UserPreferences | Observation | Activity | BaseballCard | EoidRecord |
+    EmailSubscription | Assessment | AlertSubscription | Alert | Ticket | Project
+
+"""
+All comment object types
+"""
+union CommentObject = Relationship | Attribute | Node | Activity | Assessment | Ticket
+
+"""
+All assessment object types
+"""
+union AssessmentObject = Relationship | Attribute | Node | Activity | Observation
+
+"""
+Object which may be referenced in node changes
+"""
+union NodeChangeRelatedObject = Attribute | Relationship | Comment | Observation | Activity | Assessment | ObjectList
+
+# ************************************************
+# ******************** COMMON ********************
+# ************************************************
+"""
+A query for fetching an object by its UUID
+"""
+input IdQuery {
+    "The object UUID to match"
+    id: UUID!
+}
+
+"""
+A query for timestamp data
+"""
+input TimeQuery {
+    "The matched time is greater than this date time"
+    gt: DateTime
+    "The matched time is greater than or equal to this date time"
+    gte: DateTime
+    "The matched time is less than this date time"
+    lt: DateTime
+    "The matched time is less than or equal to this date time"
+    lte: DateTime
+    "A null time should match"
+    matchNull: Boolean
+}
+
+"""
+A query for the object type enumeration
+"""
+input ObjectTypeQuery {
+    "The object type equals this value"
+    is: ObjectType
+    "The object type does not equal this value"
+    not: ObjectType
+    "The object type is one of these values"
+    any: [ObjectType!] @ContainerNotEmpty
+    "The object type is none of these values"
+    none: [ObjectType!] @ContainerNotEmpty
+}
+
+"""
+A query for the confidence enumeration
+"""
+input ConfidenceQuery {
+    "The confidence equals this value"
+    is: Confidence
+    "The confidence does not equal this value"
+    not: Confidence
+    "The confidence is one of these values"
+    any: [Confidence!] @ContainerNotEmpty
+    "The confidence is none of these values"
+    none: [Confidence!] @ContainerNotEmpty
+}
+
+"""
+A query for the likelihood float
+"""
+input LikelihoodQuery {
+    "The likelihood is less than this value"
+    lt: Float
+    "The likelihood is less than or equal to this value"
+    lte: Float
+    "The likelihood is greater than this value"
+    gt: Float
+    "The likelihood is greater than or equal to this value"
+    gte: Float
+}
+
+"""
+A query for the source type enumeration
+"""
+input SourceTypeQuery {
+    "The source type equals this value"
+    is: SourceType
+    "The source type does not equal this value"
+    not: SourceType
+    "The source type is one of these values"
+    any: [SourceType!] @ContainerNotEmpty
+    "The source type is none of these values"
+    none: [SourceType!] @ContainerNotEmpty
+}
+
+"""
+A query for the severity enumeration
+"""
+input SeverityQuery {
+    "The object type equals this value"
+    is: Severity
+    "The object type does not equal this value"
+    not: Severity
+    "The object type is one of these values"
+    any: [Severity!] @ContainerNotEmpty
+    "The object type is none of these values"
+    none: [Severity!] @ContainerNotEmpty
+}
+
+"""
+A string match query
+"""
+input StringQuery {
+    "An exact match string"
+    equals: String
+    "A not equals query"
+    notEquals: String
+    "A partial match string"
+    contains: String
+    "A not contains query"
+    notContains: String
+    "Multiple and style matches"
+    and: [StringQuery!] @ContainerNotEmpty
+    "Multiple or style matches"
+    or: [StringQuery!] @ContainerNotEmpty
+}
+
+"""
+A string list match query
+"""
+input StringQueryByList {
+    "A is in given string list query"
+    in: [String!] @ContainerNotEmpty
+    "A is not in given string list query"
+    notIn: [String!] @ContainerNotEmpty
+}
+
+"""
+A UUID list match query
+"""
+input UuidQueryByList {
+    "A is not in given UUID list query"
+    in: [UUID!] @ContainerNotEmpty
+    "A is not in given UUID list query"
+    notIn: [UUID!] @ContainerNotEmpty
+}
+
+"""
+An object history query
+"""
+input HistoryQuery {
+    "A list of object IDs to match"
+    ids: [UUID!]! @ContainerNotEmpty
+    "The versions to include. Will return all history by default"
+    versions: [Long!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+An object history filter
+"""
+input HistoryFilter {
+    "The versions to include. Will return all history by default"
+    versions: [Long!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A geospatial query
+"""
+input GeoQuery {
+    "The query GeoJson"
+    queryGeoJson: GeoJSON!
+    "The geospatial query type"
+    queryType: GeoQueryType! = INTERSECTS
+}
+
+"""
+The preferred provider filter
+"""
+input PreferredProviderFilter {
+    "The providers to use"
+    providerIds: [UUID!]
+    "Use the preferred provider on the node if one is set"
+    usePreferredProvider: Boolean
+}
+
+"""
+A latest location query
+"""
+input LatestLocationQuery {
+    "The geo query"
+    geoQuery: GeoQuery
+    "The preferred provider query"
+    preferredProvider: PreferredProviderFilter
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+}
+
+"""
+An input to remove or add ids from a list
+"""
+input UpdateUuidList {
+    "Ids to add"
+    add: [UUID!]
+    "Ids to remove"
+    remove: [UUID!]
+    "Replaces whole list with the given ids"
+    replace: [UUID!]
+}
+
+"""
+An input to update a simple label list
+"""
+input UpdateLabelList {
+    "Strings to add"
+    add: [String!] @Size(max: 128)
+    "Strings to remove"
+    remove: [String!] @Size(max: 128)
+    "Replaces whole list with the given strings"
+    replace: [String!] @Size(max: 128)
+}
+
+"""
+An input to update an email address list
+"""
+input UpdateEmailList {
+    "Strings to add"
+    add: [String!] @Size(max: 256)
+    "Strings to remove"
+    remove: [String!] @Size(max: 256)
+    "Replaces whole list with the given strings"
+    replace: [String!] @Size(max: 256)
+}
+
+"""
+An input to update a user DN list
+"""
+input UpdateUserList {
+    "Strings to add"
+    add: [String!] @Size(max: 512)
+    "Strings to remove"
+    remove: [String!] @Size(max: 512)
+    "Replaces whole list with the given strings"
+    replace: [String!] @Size(max: 512)
+}
+
+# ************************************************
+# ****************** AUDIT TYPES *****************
+# ************************************************
+"""
+An audit log entry that represents an action take against an object
+"""
+type AuditLog {
+    "The audit log ID"
+    id: UUID! @sortable
+    "The action that was taken"
+    action: Action! @sortable
+    "The date/time of the action"
+    timestamp: DateTime! @sortable
+    "The user that performed the action"
+    userId: String! @sortable
+    "The type of object that was accessed"
+    objectType: ObjectType! @sortable
+    "The ID of the object"
+    objectId: UUID! @sortable
+    "The version of the object"
+    objectVersion: Long! @sortable
+    "The complex audit ID"
+    complexAuditId: UUID @sortable
+    "The complex audit log event object"
+    complexAudit: ComplexAuditLog
+    "The referenced object"
+    object: Auditable
+}
+
+"""
+A complex audit log event containing a JSON payload
+"""
+type ComplexAuditLog {
+    "The complex"
+    id: UUID!
+    "The complex event type"
+    action: ComplexEventType!
+    "The complex event time"
+    timestamp: DateTime!
+    "The requesting user ID"
+    userId: String!
+    "The complex event payload"
+    auditJson: JSON!
+    "Other audits from this complex audit"
+    relatedAudits: [AuditLog!]
+}
+
+"""
+A page of audit events
+"""
+type AuditLogPage implements Page {
+    "The total number of matching audits"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM of the data"
+    rollupAcm: ACM
+    "The data list"
+    data: [AuditLog!]!
+}
+
+"""
+A query for audit events
+"""
+input AuditQuery {
+    "A list of audit IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "The action query"
+    action: ActionQuery
+    "The time query"
+    timestamp: TimeQuery
+    "A list of users to match"
+    userIds: [String!] @ContainerNotEmpty
+    "The object type query"
+    objectType: ObjectTypeQuery
+    "A list of object IDs to match"
+    objectIds: [UUID!] @ContainerNotEmpty
+    "A list of complex audit IDs to match"
+    complexAuditIds: [UUID!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for audit objects
+"""
+input AuditFilter {
+    "The action query"
+    action: ActionQuery
+    "The time query"
+    timestamp: TimeQuery
+    "A list of users to match"
+    userIds: [String!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+An input for the audit subscriptions
+"""
+input AuditSubscription {
+    "The action query"
+    action: ActionQuery
+    "A list of users to match"
+    userIds: [String!] @ContainerNotEmpty
+    "The object type query"
+    objectType: ObjectTypeQuery
+}
+
+"""
+A query for the action enumeration
+"""
+input ActionQuery {
+    "The action equals this value"
+    is: Action
+    "The action does not equal this value"
+    not: Action
+    "The action is one of these value"
+    any: [Action!] @ContainerNotEmpty
+    "The action is none of these value"
+    none: [Action!] @ContainerNotEmpty
+}
+
+# ************************************************
+# *************** ORIGINATOR TYPES ***************
+# ************************************************
+"""
+An originator from which ATOMS consumes data
+"""
+type Originator implements Auditable @uniqueOn(fields: ["name"]) {
+    "The originator UUID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The originator ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The originator name"
+    name: String! @sortable
+    "The originator description"
+    description: String! @sortable
+    "Audit log events for this originator"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this originator"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): OriginatorPage!
+    "The providers associated with this originator"
+    providers (
+        "The provider filter"
+        filter: ProviderFilter
+    ): ProviderPage!
+}
+
+"""
+A page of originators
+"""
+type OriginatorPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Originator!]!
+}
+
+"""
+A query for originator objects
+"""
+input OriginatorQuery {
+    "A list of originator IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create originator request
+"""
+input CreateOriginatorInput {
+    "The originator name"
+    name: String! @Size(max: 128)
+    "The originator description"
+    description: String! @Size(max: 512)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ACM"
+    acm: ACM!
+}
+
+"""
+The input type for the update originator request
+"""
+input UpdateOriginatorInput {
+    "The UUID of the originator to update"
+    id: UUID!
+    "The originator name"
+    name: String @Size(max: 128)
+    "The originator description"
+    description: String @Size(max: 512)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ACM"
+    acm: ACM
+}
+
+"""
+The input type for the sync originator request
+"""
+input SyncOriginatorInput {
+    "The UUID of the originator to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The originator name"
+    name: String @Size(max: 128)
+    "The originator description"
+    description: String @Size(max: 512)
+}
+
+# ************************************************
+# **************** PROVIDER TYPES ****************
+# ************************************************
+
+"""
+A provider from which ATOMS imports data
+"""
+type Provider implements Auditable @uniqueOn(fields: ["name"]) {
+    "The provider ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The provider ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The provider name"
+    name: String! @sortable
+    "The provider URL"
+    url: String @sortable
+    "The provider description"
+    description: String! @sortable
+    "The default ACM"
+    defaultAcm: ACM @sortable
+    "The originator ID"
+    originatorId: UUID! @sortable
+    "Audit log events for this provider"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this provider"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): ProviderPage!
+    "The resolvable originator object"
+    originator: Originator
+    "The sources associated with this provider"
+    sources (
+        "The source filter"
+        filter: SourceFilter
+    ): SourcePage!
+}
+
+"""
+A page of providers
+"""
+type ProviderPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Provider!]!
+}
+
+"""
+A query for provider objects
+"""
+input ProviderQuery {
+    "A list of provider IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "The URL match query"
+    url: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A list of originator IDs to match"
+    originatorIds: [UUID!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for provider objects
+"""
+input ProviderFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "The URL match query"
+    url: StringQuery
+    "A description match query"
+    description: StringQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create provider request
+"""
+input CreateProviderInput {
+    "The provider name"
+    name: String! @Size(max: 128)
+    "The provider description"
+    description: String! @Size(max: 512)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The provider URL"
+    url: String @Size(max: 512)
+    "The default ACM"
+    defaultAcm: ACM
+    "The originator ID"
+    originatorId: UUID!
+    "The ACM"
+    acm: ACM!
+}
+
+"""
+The input type for the update provider request
+"""
+input UpdateProviderInput {
+    "The ID of the provider to update"
+    id: UUID!
+    "The provider name"
+    name: String @Size(max: 128)
+    "The provider description"
+    description: String @Size(max: 512)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The provider URL"
+    url: String @Size(max: 512)
+    "The default ACM"
+    defaultAcm: ACM
+    "The originator ID"
+    originatorId: UUID
+    "The ACM"
+    acm: ACM
+}
+
+"""
+The input type for the sync provider request
+"""
+input SyncProviderInput {
+    "The ID of the provider to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The provider name"
+    name: String @Size(max: 128)
+    "The provider URL"
+    url: String @Size(max: 512)
+    "The provider description"
+    description: String @Size(max: 512)
+    "The default ACM"
+    defaultAcm: ACM
+    "The originator ID"
+    originatorId: UUID
+}
+
+# ************************************************
+# ***************** SOURCE TYPES *****************
+# ************************************************
+
+"""
+An Source holds the information from one report about a real life entity
+"""
+type Source implements Auditable & Verifiable @uniqueOn(fields: ["providerId", "identifier"]) @uniqueOn(fields: ["uri"]) {
+    "The source ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The source name"
+    name: String! @sortable
+    "The source description"
+    description: String @sortable
+    "The date and time at which the data was reported"
+    dateOfReport: DateTime! @sortable
+    "The date and time of the information in the source"
+    dateOfInformation: DateTime! @sortable
+    "The date and time of when the information was inserted into ATOMS"
+    dateOfCreation: DateTime! @sortable
+    "The primary topic"
+    primaryTopic: String @sortable
+    "The secondary topic"
+    secondaryTopic: String @sortable
+    "The provider ID"
+    providerId: UUID! @sortable
+    "The external resource identifier"
+    identifier: String! @sortable
+    "The external resource URI"
+    uri: String @sortable
+    "The external resource ACM"
+    dataAcm: ACM! @sortable
+    "Audit log events for this source"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this source"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): SourcePage!
+    "The resolvable provider"
+    provider: Provider
+    "The attributes associated with this source"
+    attributes (
+        "The attribute filter"
+        filter: AttributeFilter
+    ): AttributePage!
+    "The assessments associated with this source"
+    assessments (
+        "The assessment filter"
+        filter: SourceAssessmentFilter
+    ): AssessmentPage!
+    "The observations associated with this source"
+    observations (
+        "The observation filter"
+        filter: SourceObservationFilter
+    ): ObservationPage!
+    "The activities associated with this source"
+    activities (
+        "The activity filter"
+        filter: SourceActivityFilter
+    ): ActivityPage!
+    "The relationships associated with this source"
+    relationships (
+        "The relationship filter"
+        filter: SourceRelationshipFilter
+    ): RelationshipPage!
+    "The most recent object verification"
+    lastVerified: Verification!
+}
+
+"""
+A page of sources
+"""
+type SourcePage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Source!]!
+}
+
+"""
+A query for source objects
+"""
+input SourceQuery {
+    "A list of source IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A date of report time query"
+    dateOfReport: TimeQuery
+    "A date of information time query"
+    dateOfInformation: TimeQuery
+    "A creation date query"
+    dateOfCreation: TimeQuery
+    "A string query for the primary topic"
+    primaryTopic: StringQuery
+    "A string query for the secondary topic"
+    secondaryTopic: StringQuery
+    "A list of provider IDs to match"
+    providerIds: [UUID!] @ContainerNotEmpty
+    "A list of identifiers to match"
+    identifiers: [String!] @ContainerNotEmpty
+    "A URI match query"
+    uri: StringQuery
+    "Search for a string match in either the name, identifier, or uri field"
+    text: StringQuery
+    "A provider subquery"
+    providers: SourceProviderSubQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"A sub query for matching against providers"
+input SourceProviderSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "The URL match query"
+    url: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A list of originator IDs to match"
+    originatorIds: [UUID!] @ContainerNotEmpty
+}
+
+"A Sub-graph filter for source objects"
+input SourceFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A date of report time query"
+    dateOfReport: TimeQuery
+    "A date of information time query"
+    dateOfInformation: TimeQuery
+    "A creation date time query"
+    dateOfCreation: TimeQuery
+    "A string query for the primary topic"
+    primaryTopic: StringQuery
+    "A string query for the secondary topic"
+    secondaryTopic: StringQuery
+    "A list of identifiers to match"
+    identifiers: [String!] @ContainerNotEmpty
+    "A URI match query"
+    uri: StringQuery
+    "Search for a string match in either the name, identifier, or uri field"
+    text: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create source request
+"""
+input CreateSourceInput {
+    "The source name"
+    name: String! @Size(max: 128)
+    "The source description"
+    description: String @Size(max: 512)
+    "The date at which the data was reported"
+    dateOfReport: DateTime!
+    "The date and time of the information in the source"
+    dateOfInformation: DateTime!
+    "The primary topic"
+    primaryTopic: String @Size(max: 64)
+    "The secondary topic"
+    secondaryTopic: String @Size(max: 64)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The provider ID"
+    providerId: UUID!
+    "The ACM"
+    acm: ACM!
+    "The external resource identifier"
+    identifier: String! @Size(max: 128)
+    "The external resource URI"
+    uri: String @Size(max: 512)
+    "The external resource ACM"
+    dataAcm: ACM!
+}
+
+"""
+The input type for the update source request
+"""
+input UpdateSourceInput {
+    "The ID of the source to update"
+    id: UUID!
+    "The source name"
+    name: String @Size(max: 128)
+    "The source description"
+    description: String @Size(max: 512)
+    "The date at which the data was reported"
+    dateOfReport: DateTime
+    "The date and time of the information in the source"
+    dateOfInformation: DateTime
+    "The primary topic"
+    primaryTopic: String @Size(max: 64)
+    "The secondary topic"
+    secondaryTopic: String @Size(max: 64)
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The provider ID"
+    providerId: UUID
+    "The ACM"
+    acm: ACM
+    "The external resource identifier"
+    identifier: String @Size(max: 128)
+    "The external resource URI"
+    uri: String @Size(max: 512)
+    "The external resource ACM"
+    dataAcm: ACM
+}
+
+"""
+The input type for the sync source request
+"""
+input SyncSourceInput {
+    "The ID of the source to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The source name"
+    name: String @Size(max: 128)
+    "The source description"
+    description: String @Size(max: 512)
+    "The date at which the data was reported"
+    dateOfReport: DateTime
+    "The date and time of the information in the source"
+    dateOfInformation: DateTime
+    "The date and time of when the information was inserted into ATOMS"
+    dateOfCreation: DateTime
+    "The primary topic"
+    primaryTopic: String @Size(max: 64)
+    "The secondary topic"
+    secondaryTopic: String @Size(max: 64)
+    "The provider ID"
+    providerId: UUID
+    "The external resource identifier"
+    identifier: String @Size(max: 128)
+    "The external resource URI"
+    uri: String @Size(max: 512)
+    "The external resource ACM"
+    dataAcm: ACM
+}
+
+# ************************************************
+# ****************** NODE TYPES ******************
+# ************************************************
+"""
+Holds data about an object in the graph, this is the core object that handles relationships with other objects
+"""
+type Node implements Auditable & Verifiable {
+    "The node ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The labels"
+    labels: [String!] @sortable
+    "The EOID"
+    eoid: String @sortable
+    "The EOID history"
+    eoidHistory: [String!] @sortable
+    "The GUIDE ID"
+    guideId: String @sortable
+    "The GUIDE ID history"
+    guideIdHistory: [String!] @sortable
+    "The node name"
+    name: String! @sortable
+    "The object tier"
+    tier: ObjectTier! @sortable
+    "The domain of this node"
+    domain: Domain! @sortable
+    "The class IRI"
+    classIri: String! @sortable
+    "The class name"
+    className: String! @sortable
+    "The symbol Id code"
+    symbolIdCode: String @sortable
+    "The object IFC codes"
+    ifcCodes: [String!] @sortable
+    "The object allegiance"
+    allegiance: String @sortable
+    "The allegiance AOR"
+    allegianceAor: String @sortable
+    "The current AOR based on latest location"
+    currentAor: String @sortable
+    "The NSO flag"
+    isNso: Boolean! @sortable
+    "The ID of the preferred track provider if there is one"
+    trackProviderId: UUID @sortable
+    "Audit log events for this node"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this node"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): NodePage!
+    "The attributes associated with this node"
+    attributes (
+        "The attribute filter"
+        filter: AttributeFilter
+    ): AttributePage!
+    "The observations associated with this node"
+    observations (
+        "The observation filter"
+        filter: NodeObservationFilter
+    ): ObservationPage!
+    "Activities that are related to this node"
+    activities (
+        "The activity filter"
+        filter: NodeActivityFilter
+    ): ActivityPage!
+    assessments (
+        "The assessment filter"
+        filter: AssessmentFilter
+    ): AssessmentPage!
+    "The relationships associated with this node"
+    relationships (
+        "The relationship filter"
+        filter: NodeRelationshipFilter
+    ): RelationshipPage!
+    "The object lists associated with this node"
+    objectLists (
+        "The object list filter"
+        filter: ObjectListFilter
+    ): ObjectListPage!
+    "The comments associated with this node"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+    "The resolvable ontology class"
+    ontologyClass: OntologyClass
+    "The changes to the node"
+    nodeChanges(
+        "The node change filter"
+        filter: NodeNodeChangeFilter
+    ): NodeChangePage!
+    "The resolvable list of object permissions"
+    permissions: [Permission!]!
+    "The latest known location of this node"
+    latestKnownLocation(
+        "The preferred provider query"
+        filter: PreferredProviderFilter
+    ): Observation @sortable #NOTE: as a special exception, this field is sortable under the key "latest_location"
+    "The most recent object verification"
+    lastVerified: Verification!
+    "The custody status of this node"
+    custodyStatus: CustodyStatus!
+    "The track provider for this node"
+    trackProvider: Provider
+    "The tickets connected to this node"
+    tickets(
+        "The ticket filter"
+        filter: NodeTicketFilter
+    ): TicketPage!
+}
+
+"""
+A page of nodes
+"""
+type NodePage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Node!]!
+}
+
+"""
+A query for node objects
+"""
+input NodeQuery {
+    "A list of node IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "EOIDs to match"
+    eoids: [String!] @ContainerNotEmpty
+    "A guide IDs to match"
+    guideIds: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A tier match query"
+    tier: ObjectTierQuery
+    "A query for the domain of a node"
+    domain: DomainQuery
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A class name match query"
+    className: StringQuery
+    "A list of Symbol Id Codes to match"
+    symbolIdCodes: [String!] @ContainerNotEmpty
+    "A list of allegiances to match"
+    allegiances: [String!] @ContainerNotEmpty
+    "A list of allegiance AORs to match"
+    allegianceAors: [String!] @ContainerNotEmpty
+    "A list of current AORs to match"
+    currentAors: [String!] @ContainerNotEmpty
+    "A list of AORs to match against either current AOR or allegiance AOR"
+    aors: [String!] @ContainerNotEmpty
+    "Is the object a NSO"
+    isNso: Boolean
+    "A query to filter nodes based on attributes"
+    attributes: NodeAttributeQuery
+    "A query to filter nodes based on observations"
+    observations: NodeObservationQuery
+    "A query to filter nodes based on activities"
+    activities: NodeActivityQuery
+    "A query to filter nodes based on relationships"
+    relationships: NodeRelationshipQuery
+    "A query for the latest location of a node"
+    latestLocation: LatestLocationQuery
+    "A list of object list IDs to filter against"
+    objectListIds: [UUID!] @ContainerNotEmpty
+    "A query for the custody category of a node"
+    custodyCategory: CustodyCategoryQuery
+    "Sources that this node is a shallow component of"
+    componentSourceIds: [UUID!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A Sub-graph filter for node objects
+"""
+input NodeFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "EOIDs to match"
+    eoids: [String!] @ContainerNotEmpty
+    "A guide IDs to match"
+    guideIds: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A tier match query"
+    tier: ObjectTierQuery
+    "A domain match query"
+    domain: DomainQuery
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A class name match query"
+    className: StringQuery
+    "A list of Symbol Id Codes to match"
+    symbolIdCodes: [String!] @ContainerNotEmpty
+    "A list of allegiances to match"
+    allegiances: [String!] @ContainerNotEmpty
+    "A list of allegiance AORs to match"
+    allegianceAors: [String!] @ContainerNotEmpty
+    "A list of current AORs to match"
+    currentAors: [String!] @ContainerNotEmpty
+    "A list of AORs to match against either current AOR or allegiance AOR"
+    aors: [String!] @ContainerNotEmpty
+    "Is the object a NSO"
+    isNso: Boolean
+    "A query to filter nodes based on attributes"
+    attributes: NodeAttributeQuery
+    "A query to filter nodes based on observations"
+    observations: NodeObservationQuery
+    "A query to filter nodes based on activities"
+    activities: NodeActivityQuery
+    "A query to filter nodes based on relationships"
+    relationships: NodeRelationshipQuery
+    "A query for the latest location of a node"
+    latestLocation: LatestLocationQuery
+    "A query for the custody category of a node"
+    custodyCategory: CustodyCategoryQuery
+    "Sources that this node is a shallow component of"
+    componentSourceIds: [UUID!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub query for node objects
+"""
+input NodeSubQuery {
+    "A list of relationship IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "EOIDs to match"
+    eoids: [String!] @ContainerNotEmpty
+    "A guide IDs to match"
+    guideIds: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A tier match query"
+    tier: ObjectTierQuery
+    "A domain match query"
+    domain: DomainQuery
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A class name match query"
+    className: StringQuery
+    "A list of Symbol Id Codes to match"
+    symbolIdCodes: [String!] @ContainerNotEmpty
+    "A list of allegiances to match"
+    allegiances: [String!] @ContainerNotEmpty
+    "A list of allegiance AORs to match"
+    allegianceAors: [String!] @ContainerNotEmpty
+    "A list of current AORs to match"
+    currentAors: [String!] @ContainerNotEmpty
+    "A list of AORs to match against either current AOR or allegiance AOR"
+    aors: [String!] @ContainerNotEmpty
+    "Is the object a NSO"
+    isNso: Boolean
+    "A query to filter nodes based on attributes"
+    attributes: NodeAttributeQuery
+    "A query to filter nodes based on observations"
+    observations: NodeObservationQuery
+    "A query to filter nodes based on activities"
+    activities: NodeActivityQuery
+    "A query to filter nodes based on relationships"
+    relationships: NodeRelationshipQuery
+    "A query for the latest location of a node"
+    latestLocation: LatestLocationQuery
+    "A list of object list IDs to filter against"
+    objectListIds: [UUID!] @ContainerNotEmpty
+    "Sources that this node is a shallow component of"
+    componentSourceIds: [UUID!] @ContainerNotEmpty
+    "A query for the custody category of a node"
+    custodyCategory: CustodyCategoryQuery
+}
+
+"""
+A node attribute sub-selection filter
+"""
+input NodeAttributeQuery {
+    "The node has at least 1 attribute which matches the given attribute filter"
+    hasMatch: NodeAttributeSubQuery
+    "The node has no attributes which match the given attribute filter"
+    hasNoMatch: NodeAttributeSubQuery
+    "The node has attributes which match all attribute filters"
+    and: [NodeAttributeQuery!] @ContainerNotEmpty
+    "The node has attributes which match any attribute filters"
+    or: [NodeAttributeQuery!] @ContainerNotEmpty
+}
+
+"""
+The node attribute subquery that is relative to a query target node
+"""
+input NodeAttributeSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of attribute IRIs to match"
+    attributeIris: [String!] @ContainerNotEmpty
+    "An attribute name match query"
+    attributeName: StringQuery
+    "An attribute value match query"
+    attributeValue: StringQuery
+    "An attribute display value match query"
+    attributeDisplayValue: StringQuery
+    "An attribute normalized value match query"
+    attributeNormalizedValue: StringQuery
+    "An attribute type match query"
+    attributeType: AttributeTypeQuery
+    "The attribute geo query"
+    geometry: GeoQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A source type match query"
+    sourceType: SourceType
+    "A list of authority values to match"
+    authorityValues: [AuthorityValue!] @ContainerNotEmpty
+    "An authority set by match query"
+    authoritySetBy: [String!] @ContainerNotEmpty
+    "An authority set at time query"
+    authoritySetAtTime: TimeQuery
+    "A query for the value start time"
+    valueStart: TimeQuery
+    "A query for the value end time"
+    valueEnd: TimeQuery
+    "A query for the isMutable field"
+    isMutable: Boolean
+    "A query for the reviewed field"
+    isReviewed: Boolean
+    "A query for the authoritative flag"
+    isAuthoritative: Boolean
+    "A query for the isUserEntered flag"
+    isUserEntered: Boolean
+    "A query for the user who reviewed the attribute"
+    reviewedBy: [String!] @ContainerNotEmpty
+    "A query for the time of the last review state change"
+    reviewedAt: TimeQuery
+    "A string query for either the attribute name, value, or display value"
+    attributeNameOrValue: StringQuery
+}
+
+"""
+A node observation sub-selection filter
+"""
+input NodeObservationQuery {
+    "The node has at least 1 observation which matches the given attribute filter"
+    hasMatch: NodeObservationSubQuery
+    "The node has no observations which match the given attribute filter"
+    hasNoMatch: NodeObservationSubQuery
+    "The node has observations which match all attribute filters"
+    and: [NodeObservationQuery!] @ContainerNotEmpty
+    "The node has observations which match any attribute filters"
+    or: [NodeObservationQuery!] @ContainerNotEmpty
+}
+
+"""
+The node observation subquery that is relative to a query target node
+"""
+input NodeObservationSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: StringQueryByList
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for display value"
+    displayValue: StringQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "A list of source IDs"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A geo query"
+    geometry: GeoQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "A list of activity IDs"
+    activityIds: [UUID!] @ContainerNotEmpty
+    "Whether the observation is included in any activity"
+    isPartOfActivity: Boolean
+    "A source sub query"
+    sources: ObservationSourceSubQuery
+    "An activity sub query"
+    activities: ObservationActivitySubQuery
+}
+
+"""
+A node activity sub-selection filter
+"""
+input NodeActivityQuery {
+    "The node has at least 1 activity which matches the given attribute filter"
+    hasMatch: NodeActivitySubQuery
+    "The node has no activities which match the given attribute filter"
+    hasNoMatch: NodeActivitySubQuery
+    "The node has activities which match all attribute filters"
+    and: [NodeActivityQuery!] @ContainerNotEmpty
+    "The node has activities which match any attribute filters"
+    or: [NodeActivityQuery!] @ContainerNotEmpty
+}
+
+"""
+The node activity subquery that is relative to a query target node
+"""
+input NodeActivitySubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of observation IDs to match"
+    observationIds: [UUID!] @ContainerNotEmpty
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+}
+
+"""
+The node relationship sub-selection filter
+"""
+input NodeRelationshipQuery {
+    "The node has at least 1 attribute which matches the given attribute filter"
+    hasMatch: NodeRelationshipSubQuery
+    "The node has no attributes which match the given attribute filter"
+    hasNoMatch: NodeRelationshipSubQuery
+    "The node has attributes which match all attribute filters"
+    and: [NodeRelationshipQuery!] @ContainerNotEmpty
+    "The node has attributes which match any attribute filters"
+    or: [NodeRelationshipQuery!] @ContainerNotEmpty
+}
+
+"""
+The node relationship subquery that is relative to a query target node
+"""
+input NodeRelationshipSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A object property iri match string"
+    objectPropertyIris: [String!] @ContainerNotEmpty
+    "A object property name match query"
+    objectPropertyName: StringQuery
+    "The relationship direction relative to the matched node"
+    direction: RelationshipDirection! = BOTH
+    "A list of related node IDs to the target node using the direction above"
+    relatedNodeIds: [UUID!] @ContainerNotEmpty
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "An node query which searches for a node match from the target node to another node using the direction above"
+    relatedNode: NodeSubQuery
+}
+
+"""
+The node relationship sub-selection filter
+"""
+input NodeRelationshipFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A object property iri match string"
+    objectPropertyIris: [String!] @ContainerNotEmpty
+    "A object property name match query"
+    objectPropertyName: StringQuery
+    "The relationship direction relative to the matched node"
+    direction: RelationshipDirection! = BOTH
+    "A list of related node IDs to the target node using the direction above"
+    relatedNodeIds: [UUID!] @ContainerNotEmpty
+    "A list of source IDs to match against"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "An node query which searches for a node match from the target node to another node using the direction above"
+    relatedNode: NodeSubQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A query for the object tier enumeration
+"""
+input ObjectTierQuery {
+    "The tier equals this value"
+    is: ObjectTier
+    "The tier does not equal this value"
+    not: ObjectTier
+    "The tier is one of these value"
+    any: [ObjectTier!] @ContainerNotEmpty
+    "The tier is none of these value"
+    none: [ObjectTier!] @ContainerNotEmpty
+}
+
+"""
+A query for the object domain enumeration
+"""
+input DomainQuery {
+    "The domain equals this value"
+    is: Domain
+    "The domain does not equals this value"
+    not: Domain
+    "The domain is one of these value"
+    any: [Domain!] @ContainerNotEmpty
+    "The domain is none of these value"
+    none: [Domain!] @ContainerNotEmpty
+}
+
+"""
+A query for the custody category enumeration
+"""
+input CustodyCategoryQuery {
+    "The custody category equals this value"
+    is: CustodyCategory
+    "The custody category does not equals this value"
+    not: CustodyCategory
+    "The custody category is one of these value"
+    any: [CustodyCategory!] @ContainerNotEmpty
+    "The custody category is none of these value"
+    none: [CustodyCategory!] @ContainerNotEmpty
+}
+
+"""
+The input type for the create node request
+"""
+input CreateNodeInput {
+    "The ACM"
+    acm: ACM!
+    "The node name"
+    name: String! @Size(max: 128)
+    "The object tier"
+    tier: ObjectTier!
+    "The object domain"
+    domain: Domain
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI"
+    classIri: String! @Size(max: 256)
+    "The object IFC codes"
+    ifcCodes: [String!] @Size(max: 128)
+    "The object Symbol Id Code"
+    symbolIdCode: String @Size(max: 32)
+    "The object allegiance"
+    allegiance: String @Size(max: 16)
+    "The collection ID"
+    objectListId: UUID
+    "The NSO flag"
+    isNso: Boolean! = false
+    "The ID of the preferred track provider"
+    trackProviderId: UUID
+}
+
+"""
+The input type for the update node request
+"""
+input UpdateNodeInput {
+    "The ID of the node to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The node name"
+    name: String @Size(max: 128)
+    "The object tier"
+    tier: ObjectTier
+    "The object domain"
+    domain: Domain
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI"
+    classIri: String @Size(max: 256)
+    "The object Symbol Id Code"
+    symbolIdCode: String @Size(max: 32)
+    "The object IFC codes"
+    ifcCodes: [String!] @Size(max: 128)
+    "The object allegiance"
+    allegiance: String @Size(max: 16)
+    "The NSO flag"
+    isNso: Boolean
+    "The ID of the preferred track provider"
+    trackProviderId: UUID
+}
+
+"""
+The input type for the sync node request
+"""
+input SyncNodeInput {
+    "The ID of the node to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The EOID"
+    eoid: String @Size(max: 128)
+    "The EOID history"
+    eoidHistory: [String!] @Size(max: 128)
+    "The guide ID"
+    guideId: String @Size(max: 128)
+    "The guide ID history"
+    guideIdHistory: [String!] @Size(max: 128)
+    "The node name"
+    name: String @Size(max: 128)
+    "The object tier"
+    tier: ObjectTier
+    "The object domain"
+    domain: Domain
+    "The class IRI"
+    classIri: String @Size(max: 256)
+    "The object Symbol Id Code"
+    symbolIdCode: String @Size(max: 32)
+    "The object IFC codes"
+    ifcCodes: [String!] @Size(max: 128)
+    "The object allegiance"
+    allegiance: String @Size(max: 16)
+    "The NSO flag"
+    isNso: Boolean
+    "The ID of the preferred track provider"
+    trackProviderId: UUID
+}
+
+# ************************************************
+# **************** ATTRIBUTE TYPES ***************
+# ************************************************
+
+"""
+An attribute describes a node or source
+"""
+type Attribute implements Auditable & Verifiable {
+    "The attribute ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The labels"
+    labels: [String!] @sortable
+    "The attribute IRI"
+    attributeIri: String! @sortable
+    "The attribute name"
+    attributeName: String! @sortable
+    "The attribute value"
+    attributeValue: String! @sortable
+    "The attribute display value"
+    attributeDisplayValue: String @sortable
+    "The attribute normalized value"
+    attributeNormalizedValue: String @sortable
+    "The attribute type"
+    attributeType: AttributeType! @sortable
+    "The GeoJSON geometry if this is a geospatial type"
+    geometry: GeoJSON @sortable
+    "The confidence"
+    confidence: Confidence! @sortable
+    "The source type"
+    sourceType: SourceType @sortable
+    "The source ID"
+    sourceId: UUID! @sortable
+    "The node ID to which this attribute is associated"
+    nodeId: UUID @sortable
+    "The observation ID to which this attribute is associated"
+    observationId: UUID @sortable
+    "The activity ID to which this attribute is associated"
+    activityId: UUID @sortable
+    "The authority value"
+    authorityValue: AuthorityValue! @sortable
+    "The user who set the authority value"
+    authoritySetBy: String! @sortable
+    "The time at which the authority value was set"
+    authoritySetAtTime: DateTime! @sortable
+    "The effective value start time"
+    valueStart: DateTime @sortable
+    "The effective value end time"
+    valueEnd: DateTime @sortable
+    "A flag to specify if an attribute may be modified by a user"
+    isMutable: Boolean! @sortable
+    "Has the attribute been reviewed"
+    isReviewed: Boolean! @sortable
+    "The authoritative flag"
+    isAuthoritative: Boolean! @sortable
+    "The isUserEntered flag"
+    isUserEntered: Boolean! @sortable
+    "The user who reviewed the attribute"
+    reviewedBy: String @sortable
+    "The time of the last review state change"
+    reviewedAt: DateTime @sortable
+    "Audit log events for this attribute"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this attribute"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): AttributePage!
+    "The resolvable source"
+    source: Source
+    "The resolvable node"
+    node: Node
+    "The observation"
+    observation: Observation
+    "The activity"
+    activity: Activity
+    "The comments associated with this attribute"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+    assessments (
+        "The assessment filter"
+        filter: AssessmentFilter
+    ): AssessmentPage!
+    "The resolvable ontology attribute"
+    ontologyAttribute: OntologyAttribute
+    "The most recent object verification"
+    lastVerified: Verification!
+}
+
+"A page of attributes"
+type AttributePage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Attribute!]!
+}
+
+"""
+A query for attribute objects
+"""
+input AttributeQuery {
+    "A list of attribute IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of attribute IRIs to match"
+    attributeIris: [String!] @ContainerNotEmpty
+    "An attribute name match query"
+    attributeName: StringQuery
+    "An attribute value match query"
+    attributeValue: StringQuery
+    "An attribute display value match query"
+    attributeDisplayValue: StringQuery
+    "An attribute normalized value match query"
+    attributeNormalizedValue: StringQuery
+    "An attribute type match query"
+    attributeType: AttributeTypeQuery
+    "A geo query"
+    geometry: GeoQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A source type match query"
+    sourceType: SourceTypeQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of node IDs to match"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "A list of observation IDs to match"
+    observationIds: [UUID!] @ContainerNotEmpty
+    "A list of activity IDs to match"
+    activityIds: [UUID!] @ContainerNotEmpty
+    "A list of authority values to match"
+    authorityValues: [AuthorityValue!] @ContainerNotEmpty
+    "An authority set by match query"
+    authoritySetBy: [String!] @ContainerNotEmpty
+    "An authority set at time query"
+    authoritySetAtTime: TimeQuery
+    "A query for the value start time"
+    valueStart: TimeQuery
+    "A query for the value end time"
+    valueEnd: TimeQuery
+    "A query for the isMutable field"
+    isMutable: Boolean
+    "A query for the reviewed field"
+    isReviewed: Boolean
+    "A query for the authoritative flag"
+    isAuthoritative: Boolean
+    "A query for the isUserEntered flag"
+    isUserEntered: Boolean
+    "A query for the user who reviewed the attribute"
+    reviewedBy: [String!] @ContainerNotEmpty
+    "A query for the time of the last review state change"
+    reviewedAt: TimeQuery
+    "A string query for either the attribute name, value, display value, or normalized value"
+    attributeNameOrValue: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for attribute objects
+"""
+input AttributeFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of attribute IRIs to match"
+    attributeIris: [String!] @ContainerNotEmpty
+    "An attribute name match query"
+    attributeName: StringQuery
+    "An attribute value match query"
+    attributeValue: StringQuery
+    "An attribute display value match query"
+    attributeDisplayValue: StringQuery
+    "An attribute normalized value match query"
+    attributeNormalizedValue: StringQuery
+    "An attribute type match query"
+    attributeType: AttributeTypeQuery
+    "A geo query"
+    geometry: GeoQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A source type match query"
+    sourceType: SourceTypeQuery
+    "A list of authority values to match"
+    authorityValues: [AuthorityValue!] @ContainerNotEmpty
+    "An authority set by match query"
+    authoritySetBy: [String!] @ContainerNotEmpty
+    "An authority set at time query"
+    authoritySetAtTime: TimeQuery
+    "A query for the value start time"
+    valueStart: TimeQuery
+    "A query for the value end time"
+    valueEnd: TimeQuery
+    "A query for the isMutable field"
+    isMutable: Boolean
+    "A query for the reviewed field"
+    isReviewed: Boolean
+    "A query for the authoritative flag"
+    isAuthoritative: Boolean
+    "A query for the isUserEntered flag"
+    isUserEntered: Boolean
+    "A query for the user who reviewed the attribute"
+    reviewedBy: [String!] @ContainerNotEmpty
+    "A query for the time of the last review state change"
+    reviewedAt: TimeQuery
+    "A string query for either the attribute name, value, display value, or normalized value"
+    attributeNameOrValue: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+
+"""
+A query for the attribute type enumeration
+"""
+input AttributeTypeQuery {
+    "The attribute type equals this value"
+    is: AttributeType
+    "The attribute type does not equal this value"
+    not: AttributeType
+    "The attribute type is one of these value"
+    any: [AttributeType!] @ContainerNotEmpty
+    "The attribute type is none of these value"
+    none: [AttributeType!] @ContainerNotEmpty
+}
+
+"A type that describes a user's role in a specific COCOM"
+type UserRole {
+    "The cocom this role applies to. This can be n/a, meaning it does not correlate to a specific cocom."
+    aor: String!
+    "The user's role"
+    role: String!
+}
+
+"A type that describes an ATOMS group"
+type OmsGroup {
+    "The name of the group"
+    name: String!
+    "The group"
+    group: String!
+}
+
+"The input type for the create attribute request"
+input CreateAttributeInput {
+    "The attribute IRI"
+    attributeIri: String! @Size(max: 512)
+    "The attribute value"
+    attributeValue: String! @Size(max: 2048)
+    "The attribute display value"
+    attributeDisplayValue: String @Size(max: 2048)
+    "The attribute normalized value"
+    attributeNormalizedValue: String @Size(max: 2048)
+    "The attribute type"
+    attributeType: AttributeType!
+    "The GeoJSON geometry if this is a geospatial type"
+    geometry: GeoJSON
+    "The confidence"
+    confidence: Confidence!
+    "The source type"
+    sourceType: SourceType
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The source ID"
+    sourceId: UUID!
+    "The node ID"
+    nodeId: UUID
+    "The observation ID"
+    observationId: UUID
+    "The activity ID"
+    activityId: UUID
+    "The ACM"
+    acm: ACM!
+    "The effective value start time"
+    valueStart: DateTime,
+    "The effective value end time"
+    valueEnd: DateTime
+    "A flag to specify if an attribute may be modified by a user"
+    isMutable: Boolean! = true
+    "Is this attribute reviewed by the requesting user"
+    isReviewed: Boolean
+    "The authoritative flag"
+    isAuthoritative: Boolean! = false
+    "The isUserEntered flag"
+    isUserEntered: Boolean! = false
+    "The maximum authority value"
+    authorityValue: AuthorityValue
+}
+
+"The input type for the update attribute request"
+input UpdateAttributeInput {
+    "The ID of the attribute to update"
+    id: UUID!
+    "The attribute IRI"
+    attributeIri: String @Size(max: 512)
+    "The attribute value"
+    attributeValue: String @Size(max: 2048)
+    "The attribute display value"
+    attributeDisplayValue: String @Size(max: 2048)
+    "The attribute normalized value"
+    attributeNormalizedValue: String @Size(max: 2048)
+    "The attribute type"
+    attributeType: AttributeType
+    "The GeoJSON geometry if this is a geospatial type"
+    geometry: GeoJSON
+    "The confidence"
+    confidence: Confidence
+    "The source type"
+    sourceType: SourceType
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID
+    "The observation ID"
+    observationId: UUID
+    "The activity ID"
+    activityId: UUID
+    "The ACM"
+    acm: ACM
+    "The effective value start time"
+    valueStart: DateTime
+    "The effective value end time"
+    valueEnd: DateTime
+    "A flag to specify if an attribute may be modified by a user"
+    isMutable: Boolean
+    "Is this attribute reviewed by the requesting user"
+    isReviewed: Boolean
+    "The authoritative flag"
+    isAuthoritative: Boolean
+    "The isUserEntered flag"
+    isUserEntered: Boolean
+    "The maximum authority value"
+    authorityValue: AuthorityValue
+}
+
+"The input type for the sync attribute request"
+input SyncAttributeInput {
+    "The ID of the attribute to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The attribute IRI"
+    attributeIri: String @Size(max: 512)
+    "The attribute value"
+    attributeValue: String @Size(max: 2048)
+    "The attribute display value"
+    attributeDisplayValue: String @Size(max: 2048)
+    "The attribute normalized value"
+    attributeNormalizedValue: String @Size(max: 2048)
+    "The attribute type"
+    attributeType: AttributeType
+    "The GeoJSON geometry if this is a geospatial type"
+    geometry: GeoJSON
+    "The confidence"
+    confidence: Confidence
+    "The source ID"
+    sourceId: UUID
+    "The source type"
+    sourceType: SourceType
+    "The node ID"
+    nodeId: UUID
+    "The observation ID"
+    observationId: UUID
+    "The activity ID"
+    activityId: UUID
+    "The maximum authority value"
+    authorityValue: AuthorityValue
+    "The user who set the current authority value"
+    authoritySetBy: String @Size(max: 512)
+    "The time at which the authority value was set"
+    authoritySetAtTime: DateTime
+    "The effective value start time"
+    valueStart: DateTime
+    "The effective value end time"
+    valueEnd: DateTime
+    "A flag to specify if an attribute may be modified by a user"
+    isMutable: Boolean
+    "The authoritative flag"
+    isAuthoritative: Boolean
+    "The isUserEntered flag"
+    isUserEntered: Boolean
+    "Is this attribute reviewed by the requesting user"
+    isReviewed: Boolean
+    "The user who reviewed the attribute"
+    reviewedBy: String @Size(max: 512)
+    "The time at which the attribute was reviewed"
+    reviewedAt: DateTime
+}
+
+# ************************************************
+# ************** RELATIONSHIP TYPES **************
+# ************************************************
+
+"""
+A relationship between two nodes
+"""
+type Relationship implements Auditable & Verifiable {
+    "The ID of the relationship"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The acm for the relationship"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The labels"
+    labels: [String!] @sortable
+    "The name of the relationship"
+    name: String! @sortable
+    "The start node"
+    startNodeId: UUID! @sortable
+    "The end node"
+    endNodeId: UUID! @sortable
+    "The confidence"
+    confidence: Confidence! @sortable
+    "The type of relationship pulled from the ontology"
+    objectPropertyIri: String! @sortable
+    "The name of the relationship type"
+    objectPropertyName: String! @sortable
+    "The ID of the source of the relationship"
+    sourceId: UUID! @sortable
+    "The start time"
+    startTime: DateTime! @sortable
+    "The end time"
+    endTime: DateTime! @sortable
+    "Audit log events for this relationship"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this relationship"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): RelationshipPage!
+    "The resolvable start node object"
+    startNode: Node
+    "The resolvable end node object"
+    endNode: Node
+    "The resolvable source object"
+    source: Source
+    "The comments associated with this relationship"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+    assessments (
+        "The assessment filter"
+        filter: AssessmentFilter
+    ): AssessmentPage!
+    "The ontology relationship"
+    ontologyRelationship: OntologyRelationship
+    "The most recent object verification"
+    lastVerified: Verification!
+}
+
+"""
+A page of relationships
+"""
+type RelationshipPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Relationship!]!
+}
+
+"""
+A query for relationship objects
+"""
+input RelationshipQuery {
+    "A list of relationship IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "The relationship node query"
+    nodes: RelationshipNodeQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A object property iri match string"
+    objectPropertyIris: [String!] @ContainerNotEmpty
+    "A object property name match query"
+    objectPropertyName: StringQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A source Sub-graph filter for relationship objects
+"""
+input SourceRelationshipFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "The relationship node query"
+    nodes: RelationshipNodeQuery
+    "A confidence match query"
+    confidence: ConfidenceQuery
+    "A object property iri match string"
+    objectPropertyIris: [String!] @ContainerNotEmpty
+    "A object property name match query"
+    objectPropertyName: StringQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+The relationship node query input
+"""
+input RelationshipNodeQuery {
+    "A list of ID's as either start or end nodes"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "A list of start node IDs"
+    startNodeIds: [UUID!] @ContainerNotEmpty
+    "A list of end node IDs"
+    endNodeIds: [UUID!] @ContainerNotEmpty
+    "A list of related node ID queries"
+    relatedNodeIds: [RelatedNodeIds!] @ContainerNotEmpty
+    "A list of related node queries"
+    relatedNodes: [RelatedNodes!] @ContainerNotEmpty
+}
+
+"""
+A pair of related node IDs
+"""
+input RelatedNodeIds {
+    "The relationship direction"
+    direction: RelationshipDirection! = BOTH
+    "The first node ID"
+    firstNodeId: UUID!
+    "The second node ID"
+    secondNodeId: UUID!
+}
+
+"""
+A query for related nodes
+"""
+input RelatedNodes {
+    "The relationship direction"
+    direction: RelationshipDirection! = BOTH
+    "The first node query"
+    firstNode: NodeSubQuery!
+    "The second node query"
+    secondNode: NodeSubQuery!
+}
+
+"""
+The input type for the create relationship request
+"""
+input CreateRelationshipInput {
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The name of the relationship"
+    name: String! @Size(max: 512)
+    "The start node"
+    startNodeId: UUID!
+    "The end node"
+    endNodeId: UUID!
+    "Source of this relationship"
+    sourceId: UUID!
+    "The confidence"
+    confidence: Confidence!
+    "The ACM"
+    acm: ACM!
+    "The type of relationship pulled from the ontology"
+    objectPropertyIri: String! @Size(max: 512)
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+The input type for the update relationship request
+"""
+input UpdateRelationshipInput {
+    "The ID of the relationship to update"
+    id: UUID!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The name of the relationship"
+    name: String @Size(max: 512)
+    "The source of the relationship"
+    sourceId: UUID
+    "The confidence"
+    confidence: Confidence
+    "The ACM"
+    acm: ACM
+    "The type of relationship pulled from the ontology"
+    objectPropertyIri: String @Size(max: 512)
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+The input type for the sync relationship request
+"""
+input SyncRelationshipInput {
+    "The ID of the relationship to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The name of the relationship"
+    name: String @Size(max: 512)
+    "The ID of the start node"
+    startNodeId: UUID
+    "The ID of the end node"
+    endNodeId: UUID
+    "The confidence"
+    confidence: Confidence
+    "The type of relationship pulled from the ontology"
+    objectPropertyIri: String @Size(max: 512)
+    "The source of the relationship"
+    sourceId: UUID
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+# ************************************************
+# ***************** COMMENT TYPES ****************
+# ************************************************
+
+"""
+Comments allow analysts to add insight to an object without actually adding an attribute
+
+They can also be used if a user doesn't have the authority required to update an object to still make contributions
+"""
+type Comment implements Auditable {
+    "The comment ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The ID of the object upon which this comment belongs"
+    targetObjectId: UUID! @sortable
+    "The type of the object upon which this comment belongs"
+    targetObjectType: ObjectType! @sortable
+    "The user who made the comment"
+    owner: String! @sortable
+    "The time at which the comment was made"
+    timeOfComment: DateTime! @sortable
+    "The comment content type"
+    contentType: String! @sortable
+    "The comment content body"
+    contentBody: String! @sortable
+    "Audit log events for this comment"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this comment"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): CommentPage!
+    "The resolvable target object"
+    targetObject: CommentObject
+}
+
+"""
+A page of comments
+"""
+type CommentPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Comment!]!
+}
+
+"""
+A query for comment objects
+"""
+input CommentQuery {
+    "A list of comment IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of target object IDs to match"
+    targetObjectIds: [UUID!] @ContainerNotEmpty
+    "An object type match query"
+    targetObjectType: ObjectTypeQuery
+    "A list of comment owners to match"
+    owner: [String!] @ContainerNotEmpty
+    "A query for the time of comment"
+    timeOfComment: TimeQuery
+    "A content type match query"
+    contentType: StringQuery
+    "A content body match query"
+    contentBody: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for comment objects
+"""
+input CommentFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of comment owners to match"
+    owner: [String!] @ContainerNotEmpty
+    "A query for the time of comment"
+    timeOfComment: TimeQuery
+    "A content type match query"
+    contentType: StringQuery
+    "A content body match query"
+    contentBody: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create comment request
+"""
+input CreateCommentInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ID of the object upon which this comment belongs"
+    targetObjectId: UUID!
+    "The type of the object upon which this comment belongs"
+    targetObjectType: ObjectType!
+    "The comment content type"
+    contentType: String! = "text" @Size(max: 128)
+    "The comment content body"
+    contentBody: String! @Size(max: 2048)
+}
+
+"""
+The input type for the update comment request
+"""
+input UpdateCommentInput {
+    "The ID of the comment to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The comment content type"
+    contentType: String @Size(max: 128)
+    "The comment content body"
+    contentBody: String @Size(max: 2048)
+}
+
+"""
+The input type for the sync comment request
+"""
+input SyncCommentInput {
+    "The ID of the comment to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The target object ID"
+    targetObjectId: UUID
+    "The target object type"
+    targetObjectType: ObjectType
+    "The owner of this comment"
+    owner: String @Size(max: 128)
+    "The time at which this comment was made"
+    timeOfComment: DateTime
+    "The comment content type"
+    contentType: String @Size(max: 128)
+    "The comment content body"
+    contentBody: String @Size(max: 2048)
+}
+
+# ************************************************
+# ************* ASSESSMENT TYPES *****************
+# ************************************************
+"""
+Assessment schema type
+"""
+type Assessment implements Auditable {
+    "The assessment ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The ID of the object upon which this assessment belongs"
+    targetObjectId: UUID! @sortable
+    "The type of the object upon which this assessment belongs"
+    targetObjectType: ObjectType! @sortable
+    "Associated source ID"
+    sourceId: UUID! @sortable
+    "The user who created the assessment"
+    owner: String! @sortable
+    "The time at which the assessment was made"
+    timeOfAssessment: DateTime! @sortable
+    "The assessment content type"
+    contentType: String! @sortable
+    "The assessment content body"
+    contentBody: String! @sortable
+    "The assessment confidence"
+    confidence: Confidence! @sortable
+    "The assessment likelihood"
+    likelihood: Float! @Range(min: 0.0, max: 1.0)
+    "Audit log events for this comment"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this comment"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): AssessmentPage!
+    "The comments associated with this assessment"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+    "The source object"
+    source: Source
+    "The resolvable target object"
+    targetObject: AssessmentObject
+}
+
+"""
+A page of assessments
+"""
+type AssessmentPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Assessment!]!
+}
+
+"""
+A query for assessment objects
+"""
+input AssessmentQuery {
+    "A list of assessment IDs to match"
+    ids: [UUID!]
+    "A list of tags to match"
+    tags: [String!]
+    "A list of target object IDs to match"
+    targetObjectIds: [UUID!]
+    "An object type match query"
+    targetObjectType: ObjectTypeQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!]
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "Likelihood value to match"
+    likelihood: LikelihoodQuery
+    "A list of assessment owners to match"
+    owner: [String!]
+    "A query for the time of assessment"
+    timeOfAssessment: TimeQuery
+    "A content type match query"
+    contentType: StringQuery
+    "A content body match query"
+    contentBody: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+An assessment filter for source sub-graph traversals
+"""
+input SourceAssessmentFilter {
+    "A list of tags to match"
+    tags: [String!]
+    "A list of target object IDs to match"
+    targetObjectIds: [UUID!]
+    "An object type match query"
+    targetObjectType: ObjectTypeQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "Likelihood value to match"
+    likelihood: LikelihoodQuery
+    "A list of assessment owners to match"
+    owner: [String!]
+    "A query for the time of assessment"
+    timeOfAssessment: TimeQuery
+    "A content type match query"
+    contentType: StringQuery
+    "A content body match query"
+    contentBody: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for assessment objects
+"""
+input AssessmentFilter {
+    "A list of tags to match"
+    tags: [String!]
+    "A list of source IDs to match"
+    sourceIds: [UUID!]
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "Likelihood value to match"
+    likelihood: LikelihoodQuery
+    "A list of assessment owners to match"
+    owner: [String!]
+    "A query for the time of assessment"
+    timeOfAssessment: TimeQuery
+    "A content type match query"
+    contentType: StringQuery
+    "A content body match query"
+    contentBody: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create assessment request
+"""
+input CreateAssessmentInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ID of the object upon which this assessment belongs"
+    targetObjectId: UUID!
+    "The type of the object upon which this assessment belongs"
+    targetObjectType: ObjectType!
+    "The list of associated source IDs"
+    sourceId: UUID!
+    "The assessment content type"
+    contentType: String! = "text" @Size(max: 128)
+    "The assessment content body"
+    contentBody: String! @Size(max: 2048)
+    "The confidence"
+    confidence: Confidence! = UNKNOWN
+    "The likelihood"
+    likelihood: Float! = 0.01 @Range(min: 0.0, max: 1.0)
+}
+
+"""
+The input type for the update assessment request
+"""
+input UpdateAssessmentInput {
+    "The assessment ID"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The assessment source ID"
+    sourceId: UUID
+    "The assessment content type"
+    contentType: String @Size(max: 128)
+    "The assessment content body"
+    contentBody: String @Size(max: 2048)
+    "The confidence"
+    confidence: Confidence
+    "The likelihood"
+    likelihood: Float @Range(min: 0.0, max: 1.0)
+}
+
+"""
+The input type for the sync assessment request
+"""
+input syncAssessmentInput {
+    "The assessment ID to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ID of the object upon which this assessment belongs"
+    targetObjectId: UUID
+    "The type of the object upon which this assessment belongs"
+    targetObjectType: ObjectType
+    "The owner of this assessment"
+    owner: String @Size(max: 128)
+    "The associated source ID"
+    sourceId: UUID
+    "The time of assessment"
+    timeOfAssessment: DateTime
+    "The confidence"
+    confidence: Confidence
+    "The likelihood"
+    likelihood: Float @Range(min: 0.0, max: 1.0)
+    "The assessment content type"
+    contentType: String @Size(max: 128)
+    "The assessment content body"
+    contentBody: String @Size(max: 2048)
+}
+
+# ************************************************
+# ************** NOTIFICATION TYPES **************
+# ************************************************
+
+"""
+An notification that provides important information about the provider
+"""
+type Notification implements Auditable {
+    "The notification ID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The user who created the notification"
+    createdBy: String! @sortable
+    "The time at which the notification was created"
+    createdAt: DateTime! @sortable
+    "The time at which the notification expires"
+    expiresAt: DateTime @sortable
+    "The severity of the notification"
+    severity: Severity! @sortable
+    "The summary of the notification"
+    summary: String! @sortable
+    "The details of the notification"
+    details: String @sortable
+    "Audit log events for this notification"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this notification"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): NotificationPage!
+}
+
+"""
+A page of notifications
+"""
+type NotificationPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Notification!]!
+}
+
+"""
+A query for notification objects
+"""
+input NotificationQuery {
+    "A list of notification IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of user IDs to match"
+    createdBy: [String!] @ContainerNotEmpty
+    "A created at time query"
+    createdAt: TimeQuery
+    "An expires at time query"
+    expiresAt: TimeQuery
+    "A severity match query"
+    severity: SeverityQuery
+    "A summary match query"
+    summary: StringQuery
+    "A details match query"
+    details: StringQuery
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create comment request
+"""
+input CreateNotificationInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The time at which the notification expires"
+    expiresAt: DateTime
+    "The severity of the notification"
+    severity: Severity!
+    "The summary of the notification"
+    summary: String! @Size(max: 2048)
+    "The details of the notification"
+    details: String @Size(max: 2048)
+}
+
+"""
+The input type for the update comment request
+"""
+input UpdateNotificationInput {
+    "The notification ID"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The time at which the notification expires"
+    expiresAt: DateTime
+    "The severity of the notification"
+    severity: Severity
+    "The summary of the notification"
+    summary: String @Size(max: 2048)
+    "The details of the notification"
+    details: String @Size(max: 2048)
+}
+
+"""
+The input type for the sync comment request
+"""
+input SyncNotificationInput {
+    "The notification ID"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The user that created the notification"
+    createdBy: String @Size(max: 512)
+    "The time at which the notification was created"
+    createdAt: DateTime
+    "The time at which the notification expires"
+    expiresAt: DateTime
+    "The severity of the notification"
+    severity: Severity
+    "The summary of the notification"
+    summary: String @Size(max: 2048)
+    "The details of the notification"
+    details: String @Size(max: 2048)
+}
+
+# ************************************************
+# **************** ONTOLOGY TYPES ****************
+# ************************************************
+
+"""
+A query for ontology class objects
+"""
+input OntologyClassQuery {
+    "A list of IRIs to match"
+    iris: [String!] @ContainerNotEmpty
+    "A list of super class IRIs to get children of"
+    superClassIris: [String!] @ContainerNotEmpty
+    "A text match query to match against the object name"
+    name: StringQuery
+    "Whether we should only return root classes which have no parent"
+    isRoot: Boolean
+    "Whether the IRIs should be user visible"
+    isVisible: Boolean
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A query for ontology objects
+"""
+input OntologyQuery {
+    "A list of IRIs to match"
+    iris: [String!] @ContainerNotEmpty
+    "A text match query to match against the object name"
+    name: StringQuery
+    "A boolean query to search for user visible IRIs"
+    isVisible: Boolean
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"A query for getting by IRI"
+input IriQuery {
+    "The IRI"
+    iri: String!
+}
+
+"A country code and name"
+type CountryInfo {
+    "The country code"
+    countryCode: String!
+    "The country name"
+    countryName: String!
+}
+
+"An available attribute from the ontology"
+type OntologyAttribute {
+    "The ontology IRI"
+    iri: String!
+    "The ontology source"
+    source: String!
+    "The ontology version"
+    version: String!
+    "The ontology citation"
+    citation: String!
+    "The classification string"
+    classification: String!
+    "The attribute name"
+    name: String!
+    "The attribute description"
+    description: String
+    "Alternate names for the attribute"
+    aliases: [String!]
+    "DataType of the attribute"
+    dataType: String
+    "Is the attribute user visible"
+    isVisible: Boolean
+    "The category this attribute belongs to"
+    categories: [String!]
+}
+
+"A page of ontology attributes"
+type OntologyAttributePage {
+    "The total number of objects"
+    totalSize: Long!
+    "The object data"
+    data: [OntologyAttribute!]!
+}
+
+"An available class from the ontology"
+type OntologyClass {
+    "The ontology IRI"
+    iri: String!
+    "The ontology source"
+    source: String!
+    "The ontology version"
+    version: String!
+    "The ontology citation"
+    citation: String!
+    "The classification string"
+    classification: String!
+    "The class name"
+    name: String!
+    "The class description"
+    description: String
+    "Alternate names for the class"
+    aliases: [String!]
+    "The IRIs of the superclasses"
+    superclassIris: [String!]
+    "The default IFC code for the class"
+    defaultIfc: String
+    "The default symbol ID code for the class"
+    defaultSymbolIdCode: String
+    "The parent classes of this class"
+    parentOntologyClasses: [OntologyClass!]
+    "The child classes of this class"
+    childOntologyClasses: [OntologyClass!]
+    "Is the class user visible"
+    isVisible: Boolean
+    "The domain of the class"
+    domain: Domain!
+    "Whether this class has a child class"
+    isParent: Boolean!
+    "All ancestor classes of this class"
+    ancestorOntologyClasses: [OntologyClass!]
+}
+
+"A page of ontology classes"
+type OntologyClassPage {
+    "The total number of objects"
+    totalSize: Long!
+    "The object data"
+    data: [OntologyClass!]!
+}
+
+"An available relationship from the ontology"
+type OntologyRelationship {
+    "The ontology IRI"
+    iri: String!
+    "The ontology source"
+    source: String!
+    "The ontology version"
+    version: String!
+    "The ontology citation"
+    citation: String!
+    "The classification string"
+    classification: String!
+    "The relationship name"
+    name: String!
+    "The relationship description"
+    description: String
+    "Alternate names for the relationship"
+    aliases: [String!]
+    "Is the relationship user visible"
+    isVisible: Boolean
+}
+
+"A page of ontology relationships"
+type OntologyRelationshipPage {
+    "The total number of objects"
+    totalSize: Long!
+    "The object data"
+    data: [OntologyRelationship!]!
+}
+
+"The input type for the is valid ontology resource request"
+input IsValidOntologyResourceInput {
+    "The resource IRI"
+    resourceIri: String!
+}
+
+# ************************************************
+# ***************** EMAIL TYPES ******************
+# ************************************************
+
+"""
+A subscription to the email notification scheduling service
+"""
+type EmailSubscription {
+    "The email subscription UUID"
+    id: UUID! @sortable
+    "The object version"
+    version: Long! @sortable
+    "The email subscription ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The email subscription name"
+    name: String! @sortable
+    "The email subscription description"
+    description: String! @sortable
+    "The recipient address of the emails"
+    toEmails: [String!] @sortable
+    "Addresses to cc on emails"
+    ccEmails: [String!] @sortable
+    "Addresses to bcc on emails"
+    bccEmails: [String!] @sortable
+    "Owners of the email subscription"
+    owners: [String!]! @sortable
+    "The cron schedule of the email subscription, formatted in UTC as (Sec, Min, Hour, Day of Month, Month, Day of Week)"
+    cronSchedule: String! @sortable
+    "The node ids that the email contents are focused on"
+    nodeIds: [UUID!] @sortable
+    "The object list ids that the email contents are focused on"
+    objectListIds: [UUID!] @sortable
+    "Audit log events for this email subscription"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this email subscription"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): EmailSubscriptionPage!
+}
+
+"""
+A page of email subscriptions
+"""
+type EmailSubscriptionPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [EmailSubscription!]!
+}
+
+"""
+A query for email subscriptions
+"""
+input EmailSubscriptionQuery {
+    "A list of email subscription IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "Email addresses that the subscription 'toEmails' should match"
+    toEmails: [String!] @ContainerNotEmpty
+    "Email addresses that the subscription 'ccEmails' should match"
+    ccEmails: [String!] @ContainerNotEmpty
+    "Email addresses that the subscription 'bccEmails' should match"
+    bccEmails: [String!] @ContainerNotEmpty
+    "Owners that the email subscription owners should match"
+    owners: [String!] @ContainerNotEmpty
+    "The cron schedules for which to search"
+    cronSchedules: [String!]
+    "The node ids that the email subscription nodeIds should match"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "The object list ids that the email subscription nodeIds should match"
+    objectListIds: [UUID!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create email subscription request
+"""
+input CreateEmailSubscriptionInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The email subscription  name"
+    name: String! @Size(max: 128)
+    "The email subscription description"
+    description: String! @Size(max: 512)
+    "The recipient address of the emails"
+    toEmails: [String!] @Size(max: 256)
+    "Addresses to cc on emails"
+    ccEmails: [String!] @Size(max: 256)
+    "Addresses to bcc on emails"
+    bccEmails: [String!] @Size(max: 256)
+    "Owners of the email subscription"
+    owners: [String!] @Size(max: 512)
+    "The cron schedule of the email subscription"
+    cronSchedule: String! @Size(max: 128)
+    "The node ids that the email contents are focused on"
+    nodeIds: [UUID!]
+    "The object list ids that the email contents are focused on"
+    objectListIds: [UUID!]
+}
+
+"""
+The input type for the update email subscription request
+"""
+input UpdateEmailSubscriptionInput {
+    "The UUID of the email subscription to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The email subscription name"
+    name: String @Size(max: 128)
+    "The email subscription description"
+    description: String @Size(max: 512)
+    "The Update String List for toEmails"
+    toEmails: UpdateEmailList
+    "The Update String List for ccEmails"
+    ccEmails: UpdateEmailList
+    "The Update String List for bccEmails"
+    bccEmails: UpdateEmailList
+    "The Update String List for owners"
+    owners: UpdateUserList
+    "A replacement cron schedule"
+    cronSchedule: String @Size(max: 128)
+    "The Update Id List for Node Ids"
+    nodeIds: UpdateUuidList
+    "The Update Id List for Object List Ids"
+    objectListIds: UpdateUuidList
+}
+
+"""
+The input type for the update email subscription request
+"""
+input SyncEmailSubscriptionInput {
+    "The UUID of the email subscription to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The email subscription name"
+    name: String @Size(max: 128)
+    "The email subscription description"
+    description: String @Size(max: 512)
+    "The Update String List for toEmails"
+    toEmails: [String!] @Size(max: 256)
+    "The Update String List for ccEmails"
+    ccEmails: [String!] @Size(max: 256)
+    "The Update String List for bccEmails"
+    bccEmails: [String!] @Size(max: 256)
+    "The Update String List for owners"
+    owners: [String!] @Size(max: 512)
+    "A replacement cron schedule"
+    cronSchedule: String @Size(max: 128)
+    "The Update Id List for Node Ids"
+    nodeIds: [UUID!]
+    "The Update Id List for Object List Ids"
+    objectListIds: [UUID!]
+}
+
+# ************************************************
+# ************** USER METRICS TYPES **************
+# ************************************************
+
+"A user metrics entry"
+type UserMetric {
+    "The user metric ID"
+    id: UUID! @sortable
+    "The date/time the metric was created"
+    timestamp: DateTime! @sortable
+    "The user to whom the metric pertains"
+    userId: String! @sortable
+    "The type of request that was made"
+    requestType: RequestType! @sortable
+    "The name of request that was made"
+    requestNames: [String!] @sortable
+    "The latency of request that was made in milliseconds"
+    requestLatencyMs: Long! @sortable
+    "The status code/error information for the metric"
+    statusCodeErrorInfo: String! @sortable
+}
+
+"""
+A page of user metrics
+"""
+type UserMetricPage implements Page {
+    "The total number of matching user metrics"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM of the data"
+    rollupAcm: ACM
+    "The data list"
+    data: [UserMetric!]!
+}
+
+"""
+A query for user metrics
+"""
+input UserMetricQuery {
+    "A list of user metric IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "The time query"
+    timestamp: TimeQuery
+    "A list of users to match"
+    userIds: [String!] @ContainerNotEmpty
+    "The request type query"
+    requestType: RequestTypeQuery
+    "The request names query"
+    requestNames: RequestNamesQuery
+    "The request latency query"
+    requestLatencyMs: RequestLatencyQuery
+    "The status code/error info query"
+    statusCodeErrors: [String!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A query for the request type enumeration
+"""
+input RequestTypeQuery {
+    "The request type equals this value"
+    is: RequestType
+    "The request type does not equal this value"
+    not: RequestType
+    "The request type is one of these value"
+    any: [RequestType!] @ContainerNotEmpty
+    "The request type is none of these value"
+    none: [RequestType!] @ContainerNotEmpty
+}
+
+"""
+A query for request latency data
+"""
+input RequestLatencyQuery {
+    "The matched latency is greater than this latency in milliseconds"
+    gt: Long
+    "The matched latency is greater than or equal to this latency in milliseconds"
+    gte: Long
+    "The matched latency is less than this latency in milliseconds"
+    lt: Long
+    "The matched latency is less than or equal to this latency in milliseconds"
+    lte: Long
+    "A null latency should match"
+    matchNull: Boolean
+}
+
+"""
+A query for request names data
+"""
+input RequestNamesQuery {
+    "The matched request names list contains this list of request names"
+    contains: [String!] @ContainerNotEmpty
+    "The matched request names list does not contain this list of request names"
+    notContains: [String!] @ContainerNotEmpty
+    "The matched request names list has elements in common with this list of request names"
+    overlaps: [String!] @ContainerNotEmpty
+}
+
+# ************************************************
+# ************ COLLECTION STATUS TYPES ***********
+# ************************************************
+"""
+The type for a given Provider's collection status
+"""
+type ProviderCollectionStatus {
+    "The provider to which this status applies"
+    provider: Provider!
+    "status of data collection from this provider as enum OK or STALE"
+    status: CollectionStatus!
+    "latest datetime of collected data from this provider"
+    lastDataTime: DateTime
+}
+
+"""
+The type for a given originator's collection status and all it's tracked providers
+"""
+type OriginatorCollectionStatus {
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The originator to which this status applies"
+    originator: Originator!
+    "status of data collection from this originator as enum OK or STALE"
+    status: CollectionStatus!
+    "latest datetime of collected data from this originator"
+    lastDataTime: DateTime
+    "list of all providers under the originator and their respective collection statuses"
+    providerStatuses: [ProviderCollectionStatus!]!
+}
+
+"""
+return for a request for a full report of all tracked originator and provider collection statuses
+"""
+type CollectionStatusReport {
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The originator status list"
+    originatorStatuses: [OriginatorCollectionStatus!]!
+}
+
+"""
+input type for retrieving a provider collection status with the given ID
+"""
+input ProviderStatusQuery {
+    providerId: UUID!
+}
+
+"""
+input type for retrieving an originator collection status with the given ID
+"""
+input OriginatorStatusQuery {
+    originatorId: UUID!
+}
+
+# ************************************************
+# *********** OBJECT LIST TYPES ************
+# ************************************************
+
+"""
+An object list allows users to group objects together in collections.
+"""
+type ObjectList implements Auditable {
+    "The object list ID"
+    id: UUID! @sortable
+    " The object list version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "Whether the object list is public"
+    isPublic: Boolean! @sortable
+    "The owners of the object list"
+    owners: [String!]! @sortable
+    "The groups of the object list"
+    groups: [String!] @sortable
+    "The name of the object list"
+    name: String! @sortable
+    "The description of the object list"
+    description: String @sortable
+    "The node IDs of the object list"
+    nodeIds: [UUID!]! @sortable
+    "The sub-list IDs of the object list"
+    subListIds: [UUID!]! @sortable
+    "Is this a JAOL protected object list"
+    isJaol: Boolean! @sortable
+    "The list of COCOMs which control this JAOL list. List is global if no COCOMs are specified"
+    jaolCocoms: [String!] @sortable
+    "Audit log events for this object list"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this object list"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): ObjectListPage!
+    "The resolvable list of object permissions"
+    permissions: [Permission!]!
+    "The nodes associated with this object list"
+    nodes (
+        "The node filter"
+        filter: NodeFilter
+    ): NodePage!
+    "The sub-lists associated with this object list"
+    subLists: [ObjectList!]!
+    "The nodeChanges associated with the nodes in this object list"
+    nodeChanges(
+        "The node change filter"
+        filter: ObjectListNodeChangeFilter
+    ): NodeChangePage!
+    "The pending updates to this JAOL enabled list"
+    pendingUpdates: [PendingJaolUpdate!]!
+    "The tickets connected to this object list"
+    tickets(
+        "The ticket filter"
+        filter: ObjectListTicketFilter
+    ): TicketPage!
+}
+
+"""
+A page of object lists
+"""
+type ObjectListPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [ObjectList!]!
+}
+
+"""
+A pending JAOL update
+"""
+type PendingJaolUpdate {
+    "The ID of the pending update"
+    id: UUID!
+    "The ID of the object list to which this update pertains"
+    objectListId: UUID!
+    "The user who requested the change"
+    requestedBy: String!
+    "The time at which the change was requested"
+    requestedAt: DateTime!
+    "The node ID to add"
+    addNodeId: UUID
+    "The node ID to remove"
+    removeNodeId: UUID
+}
+
+"""
+A query for object lists
+"""
+input ObjectListQuery {
+    "A list of object list IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "Whether the object list is public"
+    isPublic: Boolean
+    "Whether the collection is editable by the user"
+    canEdit: Boolean
+    "A list of owners to match"
+    owners: [String!] @ContainerNotEmpty
+    "A list of groups to match"
+    groups: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A list of node IDs to match"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "A list of sub-list IDs to match"
+    subListIds: [UUID!] @ContainerNotEmpty
+    "Is this a JAOL protected object list"
+    isJaol: Boolean
+    "A list of COCOMs to match against the JAOL list"
+    jaolCocoms: [String!] @ContainerNotEmpty
+    "A filter for pending updates"
+    hasPendingUpdates: Boolean
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A Sub-graph filter for object list
+"""
+input ObjectListFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "Whether the object list is public"
+    isPublic: Boolean
+    "Whether the collection is editable by the user"
+    canEdit: Boolean
+    "A list of owners to match"
+    owners: [String!] @ContainerNotEmpty
+    "A list of groups to match"
+    groups: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A list of sub-list IDs to match"
+    subListIds: [UUID!] @ContainerNotEmpty
+    "Is this a JAOL protected object list"
+    isJaol: Boolean
+    "A list of COCOMs to match against the JAOL list"
+    jaolCocoms: [String!] @ContainerNotEmpty
+    "A filter for pending updates"
+    hasPendingUpdates: Boolean
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+The input type for the create object list request
+"""
+input CreateObjectListInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "Whether the object list is public"
+    isPublic: Boolean! = false
+    "The groups of the object list"
+    groups: [String!] @Size(max: 128)
+    "The name of the object list"
+    name: String! @Size(max: 128)
+    "The description of the object list"
+    description: String @Size(max: 2048)
+    "The IDs of the nodes in the object list"
+    nodeIds: [UUID!]
+    "The IDs of the sub-lists in the object list"
+    subListIds: [UUID!]
+    "Is this a JAOL protected object list"
+    isJaol: Boolean! = false
+    "The list of COCOMs which control this JAOL list. List is global if no COCOMs are specified"
+    jaolCocoms: [String!]
+}
+
+"""
+The input type for the update object list request
+"""
+input UpdateObjectListInput {
+    "The ID of the object list to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "Whether the object list is public"
+    isPublic: Boolean
+    "The groups of the object list"
+    groups: [String!] @Size(max: 128)
+    "The name of the object list"
+    name: String @Size(max: 128)
+    "The description of the object list"
+    description: String @Size(max: 2048)
+    "The update id list for node ids"
+    nodeIds: UpdateUuidList
+    "The IDs of the sub-lists in the object list"
+    subListIds: [UUID!]
+    "Is this a JAOL protected object list"
+    isJaol: Boolean
+    "The list of COCOMs which control this JAOL list. List is global if no COCOMs are specified"
+    jaolCocoms: [String!]
+}
+
+"""
+The input type for the sync object list request
+"""
+input SyncObjectListInput {
+    "The ID of the object list to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "Whether the object list is public"
+    isPublic: Boolean
+    "The owners of the object list"
+    owners: [String!] @Size(max: 512)
+    "The groups of the object list"
+    groups: [String!] @Size(max: 128)
+    "The name of the object list"
+    name: String @Size(max: 128)
+    "The description of the object list"
+    description: String @Size(max: 2048)
+    "The node IDs of the object list"
+    nodeIds: [UUID!]
+    "The IDs of the sub-lists in the object list"
+    subListIds: [UUID!]
+    "Is this a JAOL protected object list"
+    isJaol: Boolean
+    "The list of COCOMs which control this JAOL list. List is global if no COCOMs are specified"
+    jaolCocoms: [String!]
+}
+
+"""
+The input for adjudicating JAOL object list mutations
+"""
+input JaolAdjudicationInput {
+    "Approve the given queued JAOL updates"
+    approve: [UUID!]
+    "Deny the given queued JAOL updates"
+    deny: [UUID!]
+}
+
+# ************************************************
+# *************** NODE CHANGE TYPES **************
+# ************************************************
+
+"""
+A node change event object
+"""
+type NodeChange {
+    "The ID of the node change"
+    id: UUID! @sortable
+    "The time of the node change"
+    timestamp: DateTime! @sortable
+    "The user ID who initiated the change"
+    userId: String! @sortable
+    "The ID of the affected node"
+    nodeId: UUID! @sortable
+    "The version of the affected node"
+    nodeVersion: Long! @sortable
+    "The node change type"
+    changeType: NodeChangeType! @sortable
+    "The type of the related object"
+    relatedObjectType: ObjectType @sortable
+    "The UUID of the related object"
+    relatedObjectId: UUID @sortable
+    "The version of the related object"
+    relatedObjectVersion: Long @sortable
+    "The mutation action of the related action if the change type is OBJECT_CHANGE"
+    relatedObjectChangeAction: Action @sortable
+    "The referenced node"
+    node: Node
+    "The related object"
+    relatedObject: NodeChangeRelatedObject
+}
+
+"""
+A page of node change objects
+"""
+type NodeChangePage implements Page {
+    "The total amount of all matching data"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "A rollup ACM for the data list"
+    rollupAcm: ACM
+    "The data list"
+    data: [NodeChange!]!
+}
+
+"""
+The input object for the nodeChanges endpoint
+"""
+input NodeChangeQuery {
+    "The UUIDs of the change events to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "The object list ID for which to request node changes"
+    objectListId: UUID
+    "The timestamp query"
+    timestamp: TimeQuery
+    "A list of user IDs to match"
+    userIds: [String!] @ContainerNotEmpty
+    "A list of node IDs to match"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "A change type query"
+    changeType: NodeChangeTypeQuery
+    "A related object type query"
+    relatedObjectType: ObjectTypeQuery
+    "The related object IDs to match"
+    relatedObjectIds: [UUID!] @ContainerNotEmpty
+    "A related object mutation action query"
+    relatedObjectChangeAction: ActionQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A node change filter for node sub-graph traversals
+"""
+input NodeNodeChangeFilter {
+    "The object list ID for which to request node changes"
+    objectListId: UUID
+    "The timestamp query"
+    timestamp: TimeQuery
+    "A list of user IDs to match"
+    userIds: [String!] @ContainerNotEmpty
+    "A change type query"
+    changeType: NodeChangeTypeQuery
+    "A related object type query"
+    relatedObjectType: ObjectTypeQuery
+    "The related object IDs to match"
+    relatedObjectIds: [UUID!] @ContainerNotEmpty
+    "A related object mutation action query"
+    relatedObjectChangeAction: ActionQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A sub-graph filter for node change objects
+"""
+input ObjectListNodeChangeFilter {
+    "The timestamp query"
+    timestamp: TimeQuery
+    "A list of user IDs to match"
+    userIds: [String!] @ContainerNotEmpty
+    "A list of node IDs to match"
+    nodeIds: [UUID!] @ContainerNotEmpty
+    "A change type query"
+    changeType: NodeChangeTypeQuery
+    "A related object type query"
+    relatedObjectType: ObjectTypeQuery
+    "The related object IDs to match"
+    relatedObjectIds: [UUID!] @ContainerNotEmpty
+    "A related object mutation action query"
+    relatedObjectChangeAction: ActionQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A node change type query
+"""
+input NodeChangeTypeQuery {
+    "The action equals this value"
+    is: NodeChangeType
+    "The action does not equal this value"
+    not: NodeChangeType
+    "The action is one of these value"
+    any: [NodeChangeType!] @ContainerNotEmpty
+    "The action is none of these value"
+    none: [NodeChangeType!] @ContainerNotEmpty
+}
+
+# ************************************************
+# *********** USER PREFERENCE TYPES **************
+# ************************************************
+
+"""
+User preferences of a specific user stored in JSON
+"""
+type UserPreferences implements Auditable @uniqueOn(fields: ["userId", "appId"]){
+    "The user preferences ID"
+    id: UUID! @sortable
+    "The user preferences version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The ID of associated user"
+    userId: String! @sortable
+    "The ID of associated app"
+    appId: String! @sortable
+    "The preferences JSON blob"
+    preferences: Preferences!
+    "Audit log events for this user preferences object"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this user preferences object"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): UserPreferencesPage!
+}
+
+"""
+A page of user preferences
+"""
+type UserPreferencesPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [UserPreferences!]!
+}
+
+"""
+Input object to get user preferences
+"""
+input UserPreferencesQuery {
+    "The ID of associated user"
+    userId: String!
+    "The ID of associated app"
+    appId: String!
+}
+
+"""
+Input object to create a user preferences object
+"""
+input CreateUserPreferencesInput {
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The ID of associated user"
+    userId: String! @Size(max: 512)
+    "The ACM"
+    acm: ACM!
+    "The ID of associated app"
+    appId: String! @Size(max: 128)
+    "The preferences "
+    preferences: Preferences!
+}
+
+"""
+Input to update an existing user preferences object
+"""
+input UpdateUserPreferencesInput {
+    "The ID of the user preferences to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The user preferences JSON blob to update"
+    preferences: Preferences
+}
+
+# ************************************************
+# ************* BASEBALL CARD TYPES **************
+# ************************************************
+
+"""
+A baseball card that describes which attributes should be applied to which nodes
+"""
+type BaseballCard implements Auditable @uniqueOn(fields: ["name", "classIri"]) {
+    "The baseball card ID"
+    id: UUID! @sortable
+    "The baseball card version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The view name which can be DEFAULT, a COCOM, or a custom user name"
+    name: String! @sortable
+    "The class IRI to which this baseball card applies"
+    classIri: String! @sortable
+    "The class name"
+    className: String! @sortable
+    "The list of attribute IRIs in this view"
+    attributeIris: [String!]! @sortable
+    "The list of relationship IRIs in this view"
+    relationshipIris: [String!]! @sortable
+    "Audit log events for this baseball card object"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this baseball card object"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): BaseballCardPage!
+    "The full ontology class"
+    ontologyClass: OntologyClass!
+    "The list of full ontology attributes"
+    ontologyAttributes: [OntologyAttribute!]!
+    "The list of full ontology relationships"
+    ontologyRelationships: [OntologyRelationship!]!
+}
+
+"""
+A page of baseball cards
+"""
+type BaseballCardPage implements Page{
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [BaseballCard!]!
+}
+
+"""
+The create baseball card input
+"""
+input CreateBaseballCardInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The view name which can be DEFAULT, a COCOM, or a custom user name"
+    name: String! = "DEFAULT" @Size(max: 128)
+    "The class IRI to which this baseball card applies"
+    classIri: String! @Size(max: 512)
+    "The list of attribute IRIs in this view"
+    attributeIris: [String!]! @Size(max: 512)
+    "The list of relationship IRIs in this view"
+    relationshipIris: [String!]! = [] @Size(max: 512)
+}
+
+"""
+The update baseball card input
+"""
+input UpdateBaseballCardInput {
+    "The baseball card ID"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The view name which can be DEFAULT, a COCOM, or a custom user name"
+    name: String @Size(max: 128)
+    "The class IRI to which this baseball card applies"
+    classIri: String @Size(max: 512)
+    "The attribute IRIs update"
+    attributeIris: [String!] @Size(max: 512)
+    "The relationship IRIs update"
+    relationshipIris: [String!] @Size(max: 512)
+}
+
+"""
+The sync baseball card input
+"""
+input SyncBaseballCardInput {
+    "The baseball card ID"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The view name which can be DEFAULT, a COCOM, or a custom user name"
+    name: String @Size(max: 128)
+    "The class IRI to which this baseball card applies"
+    classIri: String @Size(max: 512)
+    "The attribute IRIs update"
+    attributeIris: [String!] @Size(max: 512)
+    "The relationship IRIs update"
+    relationshipIris: [String!] @Size(max: 512)
+}
+
+"""
+A query input for baseball cards
+"""
+input BaseballCardQuery {
+    "A list of baseball card IDs"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A string query for the name"
+    name: StringQuery
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A string query for the class name"
+    className: StringQuery
+    "A list of attribute IRIs to match"
+    attributeIris: [String!] @ContainerNotEmpty
+    "A list of relationship IRIs to match"
+    relationshipIris: [String!] @ContainerNotEmpty
+    "The page parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ************** OBSERVATION TYPES ***************
+# ************************************************
+"""
+Geospatial observation data for a node
+"""
+type Observation implements Auditable & Verifiable {
+    "The observation ID"
+    id: UUID! @sortable
+    "The observation version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The labels"
+    labels: [String!] @sortable
+    "The class IRI for this observation"
+    classIri: String! @sortable
+    "The class name for this observation"
+    className: String! @sortable
+    "The original user input value prior to GeoJSON conversion (e.g. MGRS)"
+    displayValue: String @sortable
+    "The confidence"
+    confidence: Confidence! @sortable
+    "The source ID"
+    sourceId: UUID! @sortable
+    "The node ID"
+    nodeId: UUID! @sortable
+    "The GeoJSON geometry"
+    geometry: GeoJSON! @sortable
+    "The start time"
+    startTime: DateTime @sortable
+    "The end time"
+    endTime: DateTime @sortable
+    "Audit log events for this observation object"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this observation object"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): ObservationPage!
+    "The source for this observation"
+    source: Source
+    "The node for this observation"
+    node: Node
+    "The activity for this observation"
+    activities(
+        "The activity filter"
+        filter: ObservationActivityFilter
+    ): ActivityPage!
+    "The attributes associated to this observation"
+    attributes(
+        "The attribute filter"
+        filter: AttributeFilter
+    ): AttributePage!
+    assessments (
+        "The assessment filter"
+        filter: AssessmentFilter
+    ): AssessmentPage!
+    "The resolvable ontology class"
+    ontologyClass: OntologyClass
+    "The most recent object verification"
+    lastVerified: Verification!
+}
+
+"""
+A page of observations
+"""
+type ObservationPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Observation!]!
+}
+
+"""
+The input type for creating Observation objects
+"""
+input CreateObservationInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this observation"
+    classIri: String! @Size(max: 512)
+    "The original user input value prior to GeoJSON conversion (e.g. MGRS)"
+    displayValue: String  @Size(max: 2048)
+    "The confidence"
+    confidence: Confidence! = UNKNOWN
+    "The source ID"
+    sourceId: UUID!
+    "The node ID"
+    nodeId: UUID!
+    "The GeoJSON geometry"
+    geometry: GeoJSON!
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+The input type for updating Observation objects
+"""
+input UpdateObservationInput {
+    "The ID of the observation to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this observation"
+    classIri: String @Size(max: 512)
+    "The original user input value prior to GeoJSON conversion (e.g. MGRS)"
+    displayValue: String  @Size(max: 2048)
+    "The confidence"
+    confidence: Confidence
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID
+    "The GeoJSON geometry"
+    geometry: GeoJSON
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+The input type for syncing Observation objects
+"""
+input SyncObservationInput {
+    "The ID of the observation to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this observation"
+    classIri: String @Size(max: 512)
+    "The original user input value prior to GeoJSON conversion (e.g. MGRS)"
+    displayValue: String  @Size(max: 2048)
+    "The confidence"
+    confidence: Confidence
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID
+    "The GeoJSON geometry"
+    geometry: GeoJSON
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+A query input for observations
+"""
+input ObservationQuery {
+    "A list of observation IDs"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A string query for the iri by a list of iris"
+    classIris: StringQueryByList
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for display value"
+    displayValue: StringQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "A list of source IDs"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A UUID query for the nodeId by a list of UUIDs"
+    nodeIds: UuidQueryByList
+    "A geo query"
+    geometry: GeoQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "A list of activity IDs"
+    activityIds: [UUID!] @ContainerNotEmpty
+    "Whether the observation is included in any activity"
+    isPartOfActivity: Boolean
+    "A source sub query"
+    sources: ObservationSourceSubQuery
+    "A node sub query"
+    nodes: ObservationNodeSubQuery
+    "An activity sub query"
+    activities: ObservationActivitySubQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"A sub-query for matching against sources"
+input ObservationSourceSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A description match query"
+    description: StringQuery
+    "A date of report time query"
+    dateOfReport: TimeQuery
+    "A date of information time query"
+    dateOfInformation: TimeQuery
+    "A creation date time query"
+    dateOfCreation: TimeQuery
+    "A string query for the primary topic"
+    primaryTopic: StringQuery
+    "A string query for the secondary topic"
+    secondaryTopic: StringQuery
+    "A list of provider IDs to match"
+    providerIds: [UUID!] @ContainerNotEmpty
+    "A list of identifiers to match"
+    identifiers: [String!] @ContainerNotEmpty
+    "A URI match query"
+    uri: StringQuery
+    "Search for a string match in either the name, identifier, or uri field"
+    text: StringQuery
+    "A provider subquery"
+    providers: SourceProviderSubQuery
+}
+
+"A sub-query for matching against sources"
+input ObservationNodeSubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "EOIDs to match"
+    eoids: [String!] @ContainerNotEmpty
+    "A guide IDs to match"
+    guideIds: [String!] @ContainerNotEmpty
+    "A name match query"
+    name: StringQuery
+    "A tier match query"
+    tier: ObjectTierQuery
+    "A domain match query"
+    domain: DomainQuery
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A class name match query"
+    className: StringQuery
+    "A list of Symbol Id Codes to match"
+    symbolIdCodes: [String!] @ContainerNotEmpty
+    "A list of allegiances to match"
+    allegiances: [String!] @ContainerNotEmpty
+    "A list of allegiance AORs to match"
+    allegianceAors: [String!] @ContainerNotEmpty
+    "A list of current AORs to match"
+    currentAors: [String!] @ContainerNotEmpty
+    "A list of AORs to match against either current AOR or allegiance AOR"
+    aors: [String!] @ContainerNotEmpty
+    "Is the object a NSO"
+    isNso: Boolean
+    "A list of object list IDs to filter against"
+    objectListIds: [UUID!] @ContainerNotEmpty
+    "Sources that this node is a shallow component of"
+    componentSourceIds: [UUID!] @ContainerNotEmpty
+    "A query for the custody category of a node"
+    custodyCategory: CustodyCategoryQuery
+}
+
+"A sub-query for matching against sources"
+input ObservationActivitySubQuery {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of node IDs to match"
+    nodeIds: UuidQueryByList
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+}
+
+"""
+A observation filter for source sub-graph traversals
+"""
+input SourceObservationFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: StringQueryByList
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for display value"
+    displayValue: StringQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "A list of node IDs"
+    nodeIds: UuidQueryByList
+    "A geo query"
+    geometry: GeoQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "A list of activity IDs"
+    activityIds: [UUID!] @ContainerNotEmpty
+    "Whether the observation is included in any activity"
+    isPartOfActivity: Boolean
+    "A node sub query"
+    nodes: ObservationNodeSubQuery
+    "An activity sub query"
+    activities: ObservationActivitySubQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A observation filter for node sub-graph traversals
+"""
+input NodeObservationFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: StringQueryByList
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for display value"
+    displayValue: StringQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "A list of source IDs"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A geo query"
+    geometry: GeoQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "A list of activity IDs"
+    activityIds: [UUID!] @ContainerNotEmpty
+    "Whether the observation is included in any activity"
+    isPartOfActivity: Boolean
+    "A source sub query"
+    sources: ObservationSourceSubQuery
+    "An activity sub query"
+    activities: ObservationActivitySubQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+A observation filter for activity sub-graph traversals
+"""
+input ActivityObservationFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: StringQueryByList
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for display value"
+    displayValue: StringQuery
+    "A confidence query"
+    confidence: ConfidenceQuery
+    "A list of source IDs"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of node IDs"
+    nodeIds: UuidQueryByList
+    "A geo query"
+    geometry: GeoQuery
+    "A query for the data start time"
+    startTime: TimeQuery
+    "A query for the data end time"
+    endTime: TimeQuery
+    "A source sub query"
+    sources: ObservationSourceSubQuery
+    "A node sub query"
+    nodes: ObservationNodeSubQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# *************** ACTIVITY TYPES *****************
+# ************************************************
+"""
+Activity data about one or more observations on a node
+"""
+type Activity implements Auditable & Verifiable {
+    "The activity ID"
+    id: UUID! @sortable
+    "The activity version"
+    version: Long! @sortable
+    "The ACM"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The labels"
+    labels: [String!] @sortable
+    "The class IRI for this activity"
+    classIri: String! @sortable
+    "The class name for this activity"
+    className: String! @sortable
+    "The name of the activity"
+    name: String! @sortable
+    "The description"
+    description: String @sortable
+    "The activity state"
+    state: String! @sortable
+    "The source ID"
+    sourceId: UUID @sortable
+    "The node ID"
+    nodeId: UUID! @sortable
+    "A list of observations for this activity"
+    observationIds: [UUID!] @sortable
+    "The start time"
+    startTime: DateTime! @sortable
+    "The end time"
+    endTime: DateTime! @sortable
+    "Audit log events for this activity object"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this activity object"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): ActivityPage!
+    "The source for this activity"
+    source: Source
+    "The node for this activity"
+    node: Node
+    "The attributes associated to this activity"
+    attributes(
+        "The attribute filter"
+        filter: AttributeFilter
+    ): AttributePage!
+    "The observations associated with this activity"
+    observations (
+        "The Observation filter"
+        filter: ActivityObservationFilter
+    ): ObservationPage!
+    "The comments associated with this activity"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+    assessments (
+        "The assessment filter"
+        filter: AssessmentFilter
+    ): AssessmentPage!
+    "The most recent object verification"
+    lastVerified: Verification!
+    "The ontology class for this activity"
+    ontologyClass: OntologyClass!
+}
+
+"""
+A page of activities
+"""
+type ActivityPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Activity!]!
+}
+
+"""
+An input type for creating an activity
+"""
+input CreateActivityInput {
+    "The ACM"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this activity"
+    classIri: String! @Size(max: 512)
+    "The name of the activity"
+    name: String! @Size(max: 128)
+    "The description"
+    description: String @Size(max: 512)
+    "The activity state"
+    state: String!
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID!
+    "A list of observations for this activity"
+    observationIds: [UUID!]
+    "The start time"
+    startTime: DateTime!
+    "The end time"
+    endTime: DateTime!
+}
+
+"""
+An input type for updating an activity
+"""
+input UpdateActivityInput {
+    "The ID of the activity to update"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this activity"
+    classIri: String @Size(max: 512)
+    "The name of the activity"
+    name: String @Size(max: 128)
+    "The description"
+    description: String @Size(max: 512)
+    "The activity state"
+    state: String
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID
+    "The Update List used to modify observationIds"
+    observationIds: UpdateUuidList
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+An input type for syncing an activity
+"""
+input SyncActivityInput {
+    "The ID of the activity to sync"
+    id: UUID!
+    "The ACM"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The labels"
+    labels: [String!] @Size(max: 128)
+    "The class IRI for this activity"
+    classIri: String @Size(max: 512)
+    "The name of the activity"
+    name: String @Size(max: 128)
+    "The description"
+    description: String @Size(max: 512)
+    "The activity state"
+    state: String
+    "The source ID"
+    sourceId: UUID
+    "The node ID"
+    nodeId: UUID
+    "The IDs of the observations in the activity"
+    observationIds: [UUID!]
+    "The start time"
+    startTime: DateTime
+    "The end time"
+    endTime: DateTime
+}
+
+"""
+A query input for searching activities
+"""
+input ActivityQuery {
+    "A list of activity IDs to match"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A query for the nodeId by list of UUIDs"
+    nodeIds: UuidQueryByList
+    "A list of observation IDs to match"
+    observationIds: [UUID!] @ContainerNotEmpty
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+An activity filter for source sub-graph traversals
+"""
+input SourceActivityFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of node IDs to match"
+    nodeIds: UuidQueryByList
+    "A list of observation IDs to match"
+    observationIds: [UUID!] @ContainerNotEmpty
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+An activity filter for node sub-graph traversals
+"""
+input NodeActivityFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of observation IDs to match"
+    observationIds: [UUID!] @ContainerNotEmpty
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+"""
+An activity filter for node sub-graph traversals
+"""
+input ObservationActivityFilter {
+    "A list of tags to match"
+    tags: [String!] @ContainerNotEmpty
+    "A list of labels to match"
+    labels: [String!] @ContainerNotEmpty
+    "A list of class IRIs to match"
+    classIris: [String!] @ContainerNotEmpty
+    "A string query for the class name"
+    className: StringQuery
+    "A string query for the activity name"
+    name: StringQuery
+    "A string query for the description"
+    description: StringQuery
+    "A string query for the activity state"
+    states: StringQuery
+    "A list of source IDs to match"
+    sourceIds: [UUID!] @ContainerNotEmpty
+    "A list of node IDs to match"
+    nodeIds: UuidQueryByList
+    "The start time query"
+    startTime: TimeQuery
+    "The end time query"
+    endTime: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ************** EOID RECORD TYPES ***************
+# ************************************************
+
+"""
+An EOID record type that contains the EOID information and creation metadata
+"""
+type EoidRecord @uniqueOn(fields: ["eoid"]) @uniqueOn(fields: ["objectId"]){
+    "The record ID"
+    id: UUID! @sortable
+    "The generated EOID"
+    eoid: String! @sortable
+    "The user that created the EOID"
+    createdBy: String! @sortable
+    "The time the EOID was created"
+    createdAt: DateTime! @sortable
+}
+
+"""
+A page of EOID record objects
+"""
+type EoidRecordPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [EoidRecord!]!
+}
+
+"""
+A query for a single EOID record object by either ID or EOID
+"""
+input EoidRecordIdQuery {
+    "A record ID to match against"
+    id: UUID
+    "An EOID to match against"
+    eoid: String
+}
+
+"""
+A query for EOID record objects
+"""
+input EoidRecordQuery {
+    "A list of record IDs to match against"
+    ids: [UUID!] @ContainerNotEmpty
+    "A list of EOIDs to match against"
+    eoids: [String!] @ContainerNotEmpty
+    "A list of user dns to match against"
+    createdBy: [String!] @ContainerNotEmpty
+    "A created at time query"
+    createdAt: TimeQuery
+    "The page parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ********** COLLECTION LATENCY Types ************
+# ************************************************
+
+"""
+The complete latency statistics (entire window of time and each bin)
+"""
+type CollectionLatencyStats {
+    "The latency statistics of the entire window of time"
+    overallStats: LatencyStats!
+    "The collection of latency statistics for each bin"
+    binStats: [LatencyBinStats!]!
+}
+
+"""
+The latency statistics of a window of time (entire or for a bin)
+"""
+type LatencyStats {
+    "The start time of a specific window of time (entire or for a bin)"
+    startTime: DateTime!
+    "The end time of a specific window of time (entire or for a bin)"
+    endTime: DateTime!
+    "The smallest delta (seconds) of date of creation minus date of report of all relevant sources"
+    minDorSeconds: Int!
+    "The largest delta (seconds) of date of creation minus date of report of all relevant sources"
+    maxDorSeconds: Int!
+    "The arithmetic mean of all date of report deltas of all relevant sources"
+    meanDorSeconds: Int!
+    "The arithmetic median of all date of report deltas of all relevant sources"
+    medianDorSeconds: Int!
+    "The smallest delta (seconds) of date of creation minus date of information of all relevant sources"
+    minDoiSeconds: Int!
+    "The largest delta (seconds) of date of creation minus date of information of all relevant sources"
+    maxDoiSeconds: Int!
+    "The arithmetic mean of all date of information deltas of all relevant sources"
+    meanDoiSeconds: Int!
+    "The arithmetic median of all date of information deltas of all relevant sources"
+    medianDoiSeconds: Int!
+}
+
+"""
+A Latency Statistics for a specific bin
+"""
+type LatencyBinStats {
+    "The bin identifier"
+    bin: Int!
+    "The latency statistics of this bin"
+    stats: LatencyStats!
+}
+
+"""
+The input type for collection latency
+"""
+input CollectionLatencyStatsQuery {
+    "The number of hours back in time to query"
+    lastNHours: Int! = 8 @Min(value: 0) @Max(value: 744)
+    "An optional number of bins"
+    maxStatsBins: Int! = 10 @Min(value: 0) @Max(value: 30)
+    "An optional list of provider IDs for filtering results"
+    providerIds: [UUID!] @ContainerNotEmpty
+}
+
+# ************************************************
+# *********** ALERT SUBSCRIPTION TYPES ***********
+# ************************************************
+
+"""
+The alert subscription object
+"""
+type AlertSubscription {
+    "The ID of this alert subscription"
+    id: UUID! @sortable
+    "The version of this alert subscription"
+    version: Long! @sortable
+    "The ACM of the alert subscription"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The display name of this alert subscription"
+    name: String!
+    "A description about this subscription"
+    description: String!
+    "The user to which this alert subscription belongs"
+    userId: String! @sortable
+    "The severity to use for this alert subscription (0, 1, or 2. Higher number is more severe)"
+    severity: Int! @sortable
+    "The serialized NodeQuery for this alert subscription"
+    nodeQuery: JSON! @sortable
+    "The minimum duration between alerts for a given node in seconds"
+    reNotifyThreshold: Int! @sortable
+    "Audit log events for this alert subscription"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this alert subscription"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): AlertSubscriptionPage!
+}
+
+"""
+The alert subscription page object
+"""
+type AlertSubscriptionPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [AlertSubscription!]!
+}
+
+"""
+The create input for AlertSubscription
+"""
+input CreateAlertSubscriptionInput {
+    "The ACM for this subscription"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The display name of this alert subscription"
+    name: String! @Size(max: 128)
+    "A description about this subscription"
+    description: String! @Size(max: 512)
+    "The severity to use for this alert subscription (0, 1, or 2. Higher number is more severe)"
+    severity: Int!
+    "The serialized NodeQuery for this alert subscription"
+    nodeQuery: JSON!
+    "The minimum duration between alerts for a given node in seconds"
+    reNotifyThreshold: Int! = 7200
+}
+
+"""
+The update input for AlertSubscription
+"""
+input UpdateAlertSubscriptionInput {
+    "The alert subscription UUID"
+    id: UUID!
+    "The ACM for this subscription"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The display name of this alert subscription"
+    name: String @Size(max: 128)
+    "A description about this subscription"
+    description: String @Size(max: 512)
+    "The severity to use for this alert subscription (0, 1, or 2. Higher number is more severe)"
+    severity: Int
+    "The serialized NodeQuery for this alert subscription"
+    nodeQuery: JSON
+    "The minimum duration between alerts for a given node in seconds"
+    reNotifyThreshold: Int
+}
+
+"""
+The query object for searching for alert subscriptions
+"""
+input AlertSubscriptionQuery {
+    "The alert subscription IDs"
+    ids: [UUID!]
+    "The tags to match"
+    tags: [String!]
+}
+
+# ************************************************
+# ****************** ALERT TYPES *****************
+# ************************************************
+
+"""
+The alert object
+"""
+type Alert {
+    "The ID of the alert"
+    id: UUID!
+    "The user to which this alert belongs"
+    userId: String!
+    "The UUID of the alert subscription which triggered this alert"
+    alertSubscriptionId: UUID!
+    "The UUID of the node to which this alert applies"
+    nodeId: UUID!
+    "The severity of the alert 0, 1, or 2"
+    severity: Int!
+    "The time at which the alert was created"
+    createdAt: DateTime!
+    "The time at which the alert was acknowledged"
+    acknowledgedAt: DateTime
+}
+
+"""
+The alert subscription page object
+"""
+type AlertPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Alert!]!
+}
+
+"""
+The input used to acknowledge alerts
+"""
+input AcknowledgeAlertsInput {
+    "The alert ID's to acknowledge"
+    alertIds: [UUID!]! @ContainerNotEmpty
+}
+
+"""
+The query used to find alerts
+"""
+input AlertQuery {
+    "The subscription ID's for which to fetch alerts. If not set, all alerts will be fetched"
+    alertSubscriptionIds: [UUID!]
+    "The severities to fetch"
+    severities: [Int!]
+    "The page parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ***************** PROJECT TYPES ****************
+# ************************************************
+
+"""
+The project object
+"""
+type Project {
+    "The ID of this project"
+    id: UUID! @sortable
+    "The version of this project"
+    version: Long! @sortable
+    "The ACM of the project"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The title of this project"
+    title: String! @sortable
+    "A description about this project"
+    description: String @sortable
+    "The project tags"
+    projectTags: [String!] @sortable
+    "The ticket groups ordered list"
+    ticketGroups: [TicketGroup!] @sortable
+    "The time at which this project should be completed"
+    dueAt: DateTime @sortable
+    "Audit log events for this project"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this project"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): ProjectPage!
+    tickets (
+        "The ticket filter"
+        filter: ProjectTicketFilter
+    ): TicketPage!
+}
+
+"""
+The project page object
+"""
+type ProjectPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Project!]!
+}
+
+"""
+A ticket group type to represent swimlanes
+"""
+type TicketGroup {
+    "The title of the group"
+    title: String
+    "A short description"
+    description: String!
+    "The associated tag for the group"
+    associatedTag: String!
+    "The group color"
+    color: String!
+}
+
+"""
+A ticket group type to represent swimlanes
+"""
+input TicketGroupInput {
+    "The title of the group"
+    title: String @Size(max: 128)
+    "A short description"
+    description: String! @Size(max: 2048)
+    "The associated tag for the group"
+    associatedTag: String! @Size(max: 128)
+    "The group color"
+    color: String! @Size(max: 32)
+}
+
+"""
+The create input for Project
+"""
+input CreateProjectInput {
+    "The ACM for this project"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this project"
+    title: String! @Size(max: 128)
+    "A description about this project"
+    description: String @Size(max: 2048)
+    "The project tags"
+    projectTags: [String!] @Size(max: 128)
+    "The ticket groups ordered list"
+    ticketGroups: [TicketGroupInput!]
+    "The time at which this project should be completed"
+    dueAt: DateTime
+}
+
+"""
+The update input for Project
+"""
+input UpdateProjectInput {
+    "The ticket UUID"
+    id: UUID!
+    "The ACM for this project"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this project"
+    title: String @Size(max: 128)
+    "A description about this project"
+    description: String @Size(max: 2048)
+    "The project tags"
+    projectTags: [String!] @Size(max: 128)
+    "The ticket groups ordered list"
+    ticketGroups: [TicketGroupInput!]
+    "The time at which this project should be completed"
+    dueAt: DateTime
+}
+
+"""
+The sync input for Project
+"""
+input SyncProjectInput {
+    "The ticket UUID"
+    id: UUID!
+    "The ACM for this project"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this project"
+    title: String @Size(max: 128)
+    "A description about this project"
+    description: String @Size(max: 2048)
+    "The project tags"
+    projectTags: [String!] @Size(max: 128)
+    "The ticket groups ordered list"
+    ticketGroups: [TicketGroupInput!]
+    "The time at which this project should be completed"
+    dueAt: DateTime
+}
+
+"""
+The query object for searching for tickets
+"""
+input ProjectQuery {
+    "The ticket IDs"
+    ids: [UUID!]
+    "The tags to match"
+    tags: [String!]
+    "The title search"
+    title: StringQuery
+    "The description search"
+    description: StringQuery
+    "A time query for due dates"
+    dueAt: TimeQuery
+    "The project tags to match"
+    projectTags: [String!]
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ***************** TICKET TYPES *****************
+# ************************************************
+
+"""
+The ticket object
+"""
+type Ticket {
+    "The ID of this ticket"
+    id: UUID! @sortable
+    "The version of this ticket"
+    version: Long! @sortable
+    "The ACM of the ticket"
+    acm: ACM! @sortable
+    "The tags"
+    tags: [String!] @sortable
+    "The title of this ticket"
+    title: String! @sortable
+    "A description about this ticket"
+    description: String! @sortable
+    "The ticket tags"
+    ticketTags: [String!] @sortable
+    "The status of this ticket"
+    status: TicketStatus! @sortable
+    "The type of this ticket"
+    type: TicketType! @sortable
+    "The time at which this ticket should be completed"
+    dueAt: DateTime @sortable
+    "The assignees for this ticket"
+    assignees: [String!] @sortable
+    "The project ID for this ticket"
+    projectId: UUID @sortable
+    "The object list IDs connected to this ticket"
+    objectListIds: [UUID!] @sortable
+    "The node IDs connected to this ticket"
+    nodeIds: [UUID!] @sortable
+    "Audit log events for this ticket"
+    audits (
+        "The audit filter"
+        filter: AuditFilter
+    ): AuditLogPage!
+    "The object history for this ticket"
+    history (
+        "The history filter"
+        filter: HistoryFilter
+    ): TicketPage!
+    "The project for this ticket"
+    project: Project
+    "The comments on this ticket"
+    comments (
+        "The comment filter"
+        filter: CommentFilter
+    ): CommentPage!
+}
+
+"""
+The ticket page object
+"""
+type TicketPage implements Page {
+    "The total number of objects"
+    totalSize: Long!
+    "Whether the total size has been capped"
+    totalSizeExceeded: Boolean!
+    "The rollup ACM"
+    rollupAcm: ACM
+    "The object data"
+    data: [Ticket!]!
+}
+
+"""
+The create input for Ticket
+"""
+input CreateTicketInput {
+    "The ACM for this ticket"
+    acm: ACM!
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this ticket"
+    title: String! @Size(max: 128)
+    "A description about this ticket"
+    description: String! @Size(max: 2048)
+    "The ticket tags"
+    ticketTags: [String!] @Size(max: 128)
+    "The status of this ticket"
+    status: TicketStatus!
+    "The type of this ticket"
+    type: TicketType!
+    "The time at which this ticket should be completed"
+    dueAt: DateTime
+    "The assignees for this ticket"
+    assignees: [String!] @Size(max: 512)
+    "The project ID for this ticket"
+    projectId: UUID
+    "The object list IDs connected to this ticket"
+    objectListIds: [UUID!]
+    "The node IDs connected to this ticket"
+    nodeIds: [UUID!]
+}
+
+"""
+The update input for Ticket
+"""
+input UpdateTicketInput {
+    "The ticket UUID"
+    id: UUID!
+    "The ACM for this ticket"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this ticket"
+    title: String @Size(max: 128)
+    "A description about this ticket"
+    description: String @Size(max: 2048)
+    "The ticket tags"
+    ticketTags: [String!] @Size(max: 128)
+    "The status of this ticket"
+    status: TicketStatus
+    "The type of this ticket"
+    type: TicketType
+    "The time at which this ticket should be completed"
+    dueAt: DateTime
+    "The assignees for this ticket"
+    assignees: [String!] @Size(max: 512)
+    "The project ID for this ticket"
+    projectId: UUID
+    "The object list IDs connected to this ticket"
+    objectListIds: UpdateUuidList
+    "The node IDs connected to this ticket"
+    nodeIds: UpdateUuidList
+}
+
+"""
+The sync input for Ticket
+"""
+input SyncTicketInput {
+    "The ticket UUID"
+    id: UUID!
+    "The ACM for this ticket"
+    acm: ACM
+    "The tags"
+    tags: [String!] @Size(max: 128)
+    "The title of this ticket"
+    title: String @Size(max: 128)
+    "A description about this ticket"
+    description: String @Size(max: 2048)
+    "The ticket tags"
+    ticketTags: [String!] @Size(max: 128)
+    "The status of this ticket"
+    status: TicketStatus
+    "The type of this ticket"
+    type: TicketType
+    "The time at which this ticket should be completed"
+    dueAt: DateTime
+    "The assignees for this ticket"
+    assignees: [String!] @Size(max: 512)
+    "The project ID for this ticket"
+    projectId: UUID
+    "The object list IDs connected to this ticket"
+    objectListIds: [UUID!]
+    "The node IDs connected to this ticket"
+    nodeIds: [UUID!]
+}
+
+"""
+A query for the ticket status enumeration
+"""
+input TicketStatusQuery {
+    "The source type equals this value"
+    is: TicketStatus
+    "The source type does not equal this value"
+    not: TicketStatus
+    "The source type is one of these values"
+    any: [TicketStatus!] @ContainerNotEmpty
+    "The source type is none of these values"
+    none: [TicketStatus!] @ContainerNotEmpty
+}
+
+"""
+A query for the ticket type enumeration
+"""
+input TicketTypeQuery {
+    "The source type equals this value"
+    is: TicketType
+    "The source type does not equal this value"
+    not: TicketType
+    "The source type is one of these values"
+    any: [TicketType!] @ContainerNotEmpty
+    "The source type is none of these values"
+    none: [TicketType!] @ContainerNotEmpty
+}
+
+"""
+The query object for searching for tickets
+"""
+input TicketQuery {
+    "The ticket IDs"
+    ids: [UUID!]
+    "The tags to match"
+    tags: [String!]
+    "The title search"
+    title: StringQuery
+    "The description search"
+    description: StringQuery
+    "The ticket tags to match"
+    ticketTags: [String!]
+    "The status query"
+    status: TicketStatusQuery
+    "The type query"
+    type: TicketTypeQuery
+    "A time query for due dates"
+    dueAt: TimeQuery
+    "The assignees search"
+    assignees: [String!]
+    "The project IDs to match"
+    projectIds: [UUID!]
+    "The object list IDs to match"
+    objectListIds: [UUID!]
+    "The node IDs to match"
+    nodeIds: [UUID!]
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The filter object for resolving tickets on a project
+"""
+input ProjectTicketFilter {
+    "The tags to match"
+    tags: [String!]
+    "The title search"
+    title: StringQuery
+    "The description search"
+    description: StringQuery
+    "The ticket tags to match"
+    ticketTags: [String!]
+    "The status query"
+    status: TicketStatusQuery
+    "The type query"
+    type: TicketTypeQuery
+    "A time query for due dates"
+    dueAt: TimeQuery
+    "The assignees search"
+    assignees: [String!]
+    "The object list IDs to match"
+    objectListIds: [UUID!]
+    "The node IDs to match"
+    nodeIds: [UUID!]
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The filter object for resolving tickets on a node
+"""
+input NodeTicketFilter {
+    "The tags to match"
+    tags: [String!]
+    "The title search"
+    title: StringQuery
+    "The description search"
+    description: StringQuery
+    "The ticket tags to match"
+    ticketTags: [String!]
+    "The status query"
+    status: TicketStatusQuery
+    "The type query"
+    type: TicketTypeQuery
+    "A time query for due dates"
+    dueAt: TimeQuery
+    "The assignees search"
+    assignees: [String!]
+    "The project IDs to match"
+    projectIds: [UUID!]
+    "The object list IDs to match"
+    objectListIds: [UUID!]
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+"""
+The filter object for resolving tickets on an object list
+"""
+input ObjectListTicketFilter {
+    "The tags to match"
+    tags: [String!]
+    "The title search"
+    title: StringQuery
+    "The description search"
+    description: StringQuery
+    "The ticket tags to match"
+    ticketTags: [String!]
+    "The status query"
+    status: TicketStatusQuery
+    "The type query"
+    type: TicketTypeQuery
+    "A time query for due dates"
+    dueAt: TimeQuery
+    "The assignees search"
+    assignees: [String!]
+    "The project IDs to match"
+    projectIds: [UUID!]
+    "The node IDs to match"
+    nodeIds: [UUID!]
+    "Paging parameters"
+    pageParams: PageParams
+}
+
+# ************************************************
+# ****************** MISC TYPES ******************
+# ************************************************
+"""
+Input type for purging data by tag
+"""
+input PurgeDataInput {
+    "The tag to delete with"
+    tag: String!
+}
+
+"""
+The input type for merge nodes
+"""
+input MergeObjectsInput {
+    "The node to take data from"
+    sourceNodeId: UUID!
+    "The node to merge into"
+    targetNodeId: UUID!
+    """
+    The Node fields to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    nodeFields: [NodeField!] = []
+    """
+    The attribute IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    attributeIds: [UUID!]
+    """
+    The observation IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    observationIds: [UUID!]
+    """
+    The activity IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    activityIds: [UUID!]
+    """
+    The relationship IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    relationshipIds: [UUID!]
+    """
+    The comment IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    commentIds: [UUID!]
+    """
+    The assessment IDs to copy from originator node into target node.
+    If null or not included, all will be copied. If set to an empty array, none will be copied
+    """
+    assessmentIds: [UUID!]
+    "Whether or not to recompute attribute authority based on the current user"
+    recomputeAttributeAuthority: Boolean! = false
+}
+
+"The input type for the re-sync to ES request"
+input ReSyncToEsInput {
+    "The ID of the object to re-sync to ESS"
+    id: UUID!
+    "The type of the object to re-sync to ESS"
+    objectType: ObjectType!
+}
+
+"""
+Input type for the releasability filter
+"""
+input ReleasabilityFilter {
+    "The highest classification allowed"
+    classif: String
+    "The release filter for sci_ctrls"
+    sci_ctrls: ListFieldFilter
+    "The release filter for dissem_ctrls"
+    dissem_ctrls: ListFieldFilter
+    "The release filter for rel_to"
+    rel_to: ListFieldFilter
+}
+
+"""
+A list field filter for releasability
+"""
+input ListFieldFilter {
+    "The object is exactly these"
+    exactly: [String!] @ContainerNotEmpty
+    "The object has all of these"
+    allOf: [String!] @ContainerNotEmpty
+    "The object has any of these"
+    anyOf: [String!] @ContainerNotEmpty
+    "The object has none of these"
+    noneOf: [String!] @ContainerNotEmpty
+    "The object has only these"
+    onlyOf: [String!] @ContainerNotEmpty
+    "The list field filter must be set"
+    isSet: Boolean
+}
+
+"""
+A custody status object which includes the category and observation
+"""
+type CustodyStatus {
+    "The custody category"
+    category: CustodyCategory!
+    "The end time of the latest observation"
+    timestamp: DateTime
+}
+
+# ************************************************
+# *************** SUPPORTING TYPES ***************
+# ************************************************
+
+"""
+Object verification information
+"""
+type Verification {
+    "The date/time of the verification"
+    timestamp: DateTime!
+    "The user that performed the verification"
+    userId: String!
+}
+
+"""
+Sorting and paging parameters
+
+NOTE: The service will always default this field even if it is passed as null or the parent object is null
+"""
+input PageParams {
+    "The page to retrieve"
+    page: Int! = 1 @Min(value: 1)
+    "The page size"
+    pageSize: Int! = 25 @Range(min: 1, max: 1000)
+    "The sort parameters"
+    sortParams: [SortParams!]
+}
+
+"Field sorting params"
+input SortParams {
+    "The field by which to sort"
+    field: String!
+    "The sorting direction for the field"
+    direction: SortDirection! = ASC
+}
+
+"The input type for delete by ID requests"
+input DeleteByIdInput {
+    "The object ID to delete"
+    id: UUID!
+}
+
+"The input type for restore requests"
+input RestoreInput {
+    "The ID of the object to restore"
+    id: UUID!
+}
+
+"""
+The input type for verify requests
+"""
+input VerifyInput {
+    "The ID of the object to verify"
+    id: UUID!
+}
+
+# ************************************************
+# ***************** ENUMERATIONS *****************
+# ************************************************
+
+"""The authority values for attributes and objects"""
+enum AuthorityValue {
+    "This user has full authority over the object"
+    DIAP,
+    "This user has been designated Subject Matter Expert authority for the object"
+    SME,
+    "This user does not specifically have authority for the object, but is a trusted user from a different COCOM"
+    DIAAE,
+    "This user does not have authority in any COCOM"
+    NON_DIAAE,
+    "This user has no authority at all"
+    NON_AUTHORITATIVE
+}
+
+"CRUD Permission values"
+enum Permission {
+    CREATE,
+    READ,
+    UPDATE,
+    DELETE,
+    REVIEW
+}
+
+"The sort directions"
+enum SortDirection {
+    ASC,
+    DESC,
+    DESC_NULLS_LAST
+}
+
+"""
+The audit action values
+"""
+enum Action {
+    CREATE,
+    UPDATE,
+    DELETE,
+    RESTORE,
+    VERIFY,
+    MERGE_SOURCE,
+    MERGE_TARGET
+}
+
+"""
+The complex audit event type
+"""
+enum ComplexEventType {
+    NODE_MERGE
+}
+
+"The object types"
+enum ObjectType {
+    ORIGINATOR
+    PROVIDER
+    SOURCE
+    ATTRIBUTE
+    OBSERVATION
+    ACTIVITY
+    RELATIONSHIP
+    NODE
+    COMMENT
+    NOTIFICATION
+    OBJECT_LIST
+    USER_PREFERENCES
+    BASEBALL_CARD
+    EMAIL_SUBSCRIPTION
+    ASSESSMENT
+    ALERT_SUBSCRIPTION
+    TICKET
+    PROJECT
+}
+
+"An enumeration for how confident the data is"
+enum Confidence {
+    UNKNOWN
+    LOW
+    MODERATE
+    HIGH
+}
+
+"The Tier of the object- whether it is directly from a source or derived from other information"
+enum ObjectTier {
+    PRIMARY
+    DERIVATIVE
+    CONTRIBUTED
+    UNESTABLISHED
+    UNKNOWN
+}
+
+"An enumeration for what domain ... is"
+enum Domain {
+    UNKNOWN
+    ANY
+    GROUND
+    SEA_SURFACE
+    SEA_SUBSURFACE
+    AIR
+    CYBER
+    SPACE
+}
+
+"""
+The directionality of the relationship.
+
+Ex for has_allegiance_to:
+INCOMING: THAT object has allegiance to THIS object
+OUTGOING: THIS object has allegiance to THAT object
+BOTH: These objects have allegiance to each other
+"""
+enum RelationshipDirection {
+    INCOMING
+    OUTGOING
+    BOTH
+}
+
+"""
+The notification severity levels
+"""
+enum Severity {
+    "General information that should not impact system operations"
+    INFORMATIONAL
+    "Warnings that may impact the system but allow the system operations to continue in a potentially degraded state"
+    WARNING
+    "Critical information that may prevent the system from operating normally"
+    CRITICAL
+}
+
+"""
+The fields on a Node
+"""
+enum NodeField {
+    TAGS
+    LABELS
+    NAME
+    TIER
+    DOMAIN
+    CLASS_IRI
+    SYMBOL_ID_CODE
+    IFC_CODES
+    ALLEGIANCE
+    IS_NSO
+    TRACK_PROVIDER_ID
+}
+
+"""
+The request types
+"""
+enum RequestType {
+    "A request that reads an object"
+    QUERY
+    "A request that creates, updates, or deletes an object"
+    MUTATION
+    "A request that opens a connection for a stream of objects"
+    SUBSCRIPTION
+}
+
+"""
+The attribute value types
+"""
+enum AttributeType {
+    "A boolean value of either 'true' or 'false'"
+    BOOLEAN
+    "A sting value"
+    STRING
+    "A number value"
+    NUMBER
+    "An ISO 8601 compliant timestamp"
+    TIMESTAMP
+    "An arbitrary object"
+    OBJECT
+    "A geospatial location"
+    GEOSPATIAL
+    "An image"
+    IMAGE
+}
+
+"""
+The geo query type
+"""
+enum GeoQueryType {
+    "The query GeoJson intersects the stored geometry"
+    INTERSECTS
+    "The query GeoJson does not intersect the stored geometry"
+    DISJOINT
+}
+
+"""
+The collection statuses
+"""
+enum CollectionStatus {
+    "Objects pulled for an originator or provider meet the threshold date for healthy status"
+    OK
+    "None of the objects delivered back from the provider or originator have been returned by the threshold date for healthy"
+    STALE
+}
+
+"""
+The node change type
+"""
+enum NodeChangeType {
+    "The node was created"
+    CREATE
+    "The node was updated"
+    UPDATE
+    "The node was deleted"
+    DELETE
+    "The node was restored"
+    RESTORE
+    "The node was verified"
+    VERIFY
+    "The node was merged into another node"
+    MERGE_SOURCE
+    "Another node was merged into this node"
+    MERGE_TARGET
+    "A related object was gained"
+    RELATED_OBJECT_GAIN
+    "A related object was changed in some way"
+    RELATED_OBJECT_CHANGE
+    "A related object was lost"
+    RELATED_OBJECT_LOSS
+}
+
+"""
+The source type
+"""
+enum SourceType {
+    "Comes from a single source"
+    SINGLE_SOURCE,
+    "Comes from all sources"
+    ALL_SOURCE
+}
+
+"""
+The custody category
+"""
+enum CustodyCategory {
+    UNKNOWN
+    GREEN
+    YELLOW
+    RED
+}
+
+"""
+The ticket type
+"""
+enum TicketType {
+    TASK
+}
+
+"""
+The ticket status
+"""
+enum TicketStatus {
+    OPEN
+    CLOSED
+}
+
+# ************************************************
+# ************************************************
+# ************************************************
