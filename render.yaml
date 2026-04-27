@@ -1,0 +1,25 @@
+﻿services:
+  - type: web
+    name: anbconnect-atoms-sim
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: GRAPHQL_PATH
+        value: /graphql
+      - key: SEED_DEMO_DATA
+        value: "true"
+      - key: RESET_ATOMS_SIM_STORE
+        value: "false"
+      - key: ATOMS_SIM_REQUIRE_AUTH
+        value: "true"
+      - key: ATOMS_SIM_AUTH_TOKEN
+        sync: false

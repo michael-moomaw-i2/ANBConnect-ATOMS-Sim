@@ -1,0 +1,20 @@
+{
+  "name": "anbconnect-atoms-sim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lightweight file-backed ATOMS GraphQL simulator for ANB Connect development.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:pki-local": "powershell -ExecutionPolicy Bypass -File ./scripts/start-local-pki.ps1",
+    "reset:store": "powershell -ExecutionPolicy Bypass -File ./scripts/reset-store.ps1",
+    "check": "node --check index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1"
+  }
+}

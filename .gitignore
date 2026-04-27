@@ -1,0 +1,10 @@
+﻿node_modules/
+data/
+logs/
+certs/
+.env
+.env.*
+!.env.example
+.render-atoms-sim.local.json
+npm-debug.log*
+.DS_Store
