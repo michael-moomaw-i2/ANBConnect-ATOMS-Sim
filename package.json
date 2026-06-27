@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node index.js",
     "start:pki-local": "powershell -ExecutionPolicy Bypass -File ./scripts/start-local-pki.ps1",
-    "reset:store": "powershell -ExecutionPolicy Bypass -File ./scripts/reset-store.ps1",
-    "check": "node --check index.js"
+    "reset:store": "powershell -ExecutionPolicy Bypass -File ./scripts/reset-store.ps1 -Profile ExampleNodes",
+    "reset:empty": "powershell -ExecutionPolicy Bypass -File ./scripts/reset-store.ps1 -Profile Empty",
+    "test:example": "node ./scripts/test-example-flow.js"
   },
   "dependencies": {
     "@apollo/server": "^4.10.0",

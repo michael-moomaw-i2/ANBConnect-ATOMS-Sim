@@ -1,0 +1,628 @@
+{
+  "schemaVersion": 2,
+  "fixtureId": "pdf-example-nodes-v1",
+  "description": "Deterministic ATOMS simulator fixture derived from docs/Example GraphQL Queries.pdf Query for Nodes response. Includes one supplemental cross-node relationship for endpoint testing.",
+  "expected": {
+    "nodeCount": 2,
+    "attributeCount": 1,
+    "observationCount": 3,
+    "sourceRelationshipCount": 2,
+    "supplementalRelationshipCount": 1,
+    "relationshipCount": 3,
+    "chartEntityCount": 5,
+    "chartLinkCount": 6
+  },
+  "savedUtc": "2026-06-24T09:00:00.000Z",
+  "reason": "fixture:pdf-example-nodes-v1",
+  "counts": {
+    "originators": 1,
+    "providers": 1,
+    "sources": 1,
+    "nodes": 2,
+    "attributes": 1,
+    "observations": 3,
+    "relationships": 3,
+    "ontologyClasses": 2,
+    "ontologyAttributes": 1,
+    "ontologyRelationships": 2
+  },
+  "data": {
+    "originators": [
+      {
+        "id": "11111111-1111-4111-8111-111111111101",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "EXAMPLE_QUERY"
+        ],
+        "name": "Example GraphQL Queries",
+        "description": "Deterministic source fixture for ANB Connect ATOMS testing."
+      }
+    ],
+    "providers": [
+      {
+        "id": "11111111-1111-4111-8111-111111111102",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "EXAMPLE_QUERY"
+        ],
+        "name": "ATOMS Example Provider",
+        "url": "urn:anbconnect:atoms-example-provider",
+        "description": "Provider for the PDF-derived ATOMS simulator fixture.",
+        "defaultAcm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "originatorId": "11111111-1111-4111-8111-111111111101"
+      }
+    ],
+    "sources": [
+      {
+        "id": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2",
+          "EXAMPLE_QUERY"
+        ],
+        "name": "Example GraphQL Queries.pdf fixture",
+        "description": "Source evidence for the deterministic Query for Nodes test case.",
+        "dateOfReport": "2026-06-03T12:00:43.202Z",
+        "dateOfInformation": "2026-06-03T12:00:43.202Z",
+        "dateOfCreation": "2026-06-03T12:00:43.202Z",
+        "primaryTopic": "Aircraft",
+        "secondaryTopic": "ATOMS GraphQL Example",
+        "providerId": "11111111-1111-4111-8111-111111111102",
+        "identifier": "pdf-example-nodes-v1",
+        "uri": "urn:anbconnect:atoms-example:nodes",
+        "dataAcm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "lastVerified": {
+          "timestamp": "2026-06-03T12:00:43.202Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "id": "09b68cee-0864-4142-9e7e-ac4f2fac5be1",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "eoid": "oms-000000000000",
+        "eoidHistory": [],
+        "guideId": "omsb-guide-local/oms-000000000000",
+        "guideIdHistory": [],
+        "name": "name",
+        "tier": "PRIMARY",
+        "domain": "GROUND",
+        "classIri": "http://www.ontologyrepository.com/CommonCoreOntologies/Aircraft",
+        "className": "Aircraft",
+        "symbolIdCode": "10030100001200000900",
+        "ifcCodes": [
+          "100",
+          "200"
+        ],
+        "allegiance": "USA",
+        "allegianceAor": "NORTHCOM",
+        "currentAor": null,
+        "isNso": false,
+        "trackProviderId": null,
+        "permissions": [
+          "CREATE",
+          "READ",
+          "UPDATE",
+          "DELETE"
+        ],
+        "lastVerified": {
+          "timestamp": "2026-06-03T12:00:43.202Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        },
+        "custodyStatus": {
+          "category": "UNKNOWN",
+          "timestamp": null
+        }
+      },
+      {
+        "id": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "eoid": "oms-000000000001",
+        "eoidHistory": [],
+        "guideId": "omsb-guide-local/oms-000000000001",
+        "guideIdHistory": [],
+        "name": "name",
+        "tier": "PRIMARY",
+        "domain": "GROUND",
+        "classIri": "http://www.ontologyrepository.com/CommonCoreOntologies/Aircraft",
+        "className": "Aircraft",
+        "symbolIdCode": "10030100001200000900",
+        "ifcCodes": [
+          "100",
+          "200"
+        ],
+        "allegiance": "USA",
+        "allegianceAor": "NORTHCOM",
+        "currentAor": null,
+        "isNso": false,
+        "trackProviderId": null,
+        "permissions": [
+          "CREATE",
+          "READ",
+          "UPDATE",
+          "DELETE"
+        ],
+        "lastVerified": {
+          "timestamp": "2026-06-03T13:22:08.781Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        },
+        "custodyStatus": {
+          "category": "GREEN",
+          "timestamp": "2028-01-01T00:00:00.000Z"
+        }
+      }
+    ],
+    "attributes": [
+      {
+        "id": "44d94c76-0bcb-4a61-9c7e-a3f25ba53989",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "attributeIri": "https://foundry.ai.mil/ontology/4901-001/hasTailNumber",
+        "attributeName": "Tail Number",
+        "attributeValue": "attribute value",
+        "attributeDisplayValue": "display value",
+        "attributeNormalizedValue": "normalized value",
+        "attributeType": "GEOSPATIAL",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.1088,
+            38.8801,
+            0.0
+          ],
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        "confidence": "HIGH",
+        "sourceType": "SINGLE_SOURCE",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "nodeId": "09b68cee-0864-4142-9e7e-ac4f2fac5be1",
+        "observationId": null,
+        "activityId": null,
+        "authorityValue": "DIAP",
+        "authoritySetBy": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us",
+        "authoritySetAtTime": "2026-06-03T12:40:20.677Z",
+        "valueStart": "2023-01-01T00:00:00.000Z",
+        "valueEnd": "2028-01-01T00:00:00.000Z",
+        "isMutable": true,
+        "isReviewed": false,
+        "isAuthoritative": false,
+        "isUserEntered": false,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "lastVerified": {
+          "timestamp": "2026-06-03T12:40:20.677Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "b7cab349-6281-4902-b147-29063aa734fc",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "classIri": "http://www.ontologyrepository.com/CommonCoreOntologies/ObjectTrackPoint",
+        "className": "Object Track Point",
+        "displayValue": "display value 1",
+        "confidence": "HIGH",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "nodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.1088,
+            38.8801,
+            0.0
+          ],
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        "startTime": "2023-01-01T00:00:00.000Z",
+        "endTime": "2028-01-01T00:00:00.000Z",
+        "lastVerified": {
+          "timestamp": "2023-01-01T00:00:00.000Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      },
+      {
+        "id": "e2ba67d8-35ea-4992-aa29-201ddec75c56",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "classIri": "http://www.ontologyrepository.com/CommonCoreOntologies/ObjectTrackPoint",
+        "className": "Object Track Point",
+        "displayValue": "display value 2",
+        "confidence": "HIGH",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "nodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.1088,
+            38.8801,
+            0.0
+          ],
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        "startTime": "2023-01-01T00:05:00.000Z",
+        "endTime": "2028-01-01T00:05:00.000Z",
+        "lastVerified": {
+          "timestamp": "2023-01-01T00:05:00.000Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      },
+      {
+        "id": "d7059d9c-c5f4-4815-9976-4b05212e7fba",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "classIri": "http://www.ontologyrepository.com/CommonCoreOntologies/ObjectTrackPoint",
+        "className": "Object Track Point",
+        "displayValue": "display value 3",
+        "confidence": "HIGH",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "nodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -77.1088,
+            38.8801,
+            0.0
+          ],
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        },
+        "startTime": "2023-01-01T00:10:00.000Z",
+        "endTime": "2028-01-01T00:10:00.000Z",
+        "lastVerified": {
+          "timestamp": "2023-01-01T00:10:00.000Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      }
+    ],
+    "relationships": [
+      {
+        "id": "7744982d-4695-445c-84a3-801a8ce6165c",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "name": "name",
+        "startNodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "endNodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "startTime": "2023-01-01T00:00:00.000Z",
+        "endTime": "2028-01-01T00:00:00.000Z",
+        "confidence": "HIGH",
+        "objectPropertyIri": "https://foundry.ai.mil/ontology/4901-001/operatedBy",
+        "objectPropertyName": "operated by",
+        "lastVerified": {
+          "timestamp": "2026-06-03T13:34:48.360Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      },
+      {
+        "id": "320448ea-bcd4-4a9b-995f-c8ebfe0bb5b0",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "name": "name",
+        "startNodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "endNodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "startTime": "2023-01-01T00:00:00.000Z",
+        "endTime": "2028-01-01T00:00:00.000Z",
+        "confidence": "HIGH",
+        "objectPropertyIri": "https://foundry.ai.mil/ontology/4901-001/operatedBy",
+        "objectPropertyName": "operated by",
+        "lastVerified": {
+          "timestamp": "2026-06-03T13:34:48.360Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      },
+      {
+        "id": "11111111-1111-4111-8111-111111111111",
+        "version": 0,
+        "acm": {
+          "banner": "UNCLASSIFIED",
+          "classif": "U",
+          "classif_type": "US",
+          "f_clearance": [
+            "u"
+          ],
+          "portion": "U",
+          "version": "3.0"
+        },
+        "tags": [
+          "T1",
+          "T2"
+        ],
+        "labels": [
+          "SM_ENRICHED"
+        ],
+        "name": "supplemental example link",
+        "startNodeId": "09b68cee-0864-4142-9e7e-ac4f2fac5be1",
+        "endNodeId": "848a3fbe-e2ca-40f3-b7a4-ccfaeada5f5a",
+        "sourceId": "1054ff08-7ebf-4cad-9c2a-c07b9559ff7a",
+        "startTime": "2023-01-01T00:00:00.000Z",
+        "endTime": "2028-01-01T00:00:00.000Z",
+        "confidence": "HIGH",
+        "objectPropertyIri": "https://anbconnect.local/ontology/associatedWith",
+        "objectPropertyName": "associated with",
+        "lastVerified": {
+          "timestamp": "2026-06-03T13:34:48.360Z",
+          "userId": "cn=test10,ou=jade,ou=meme,o=bia,st=maryland,c=us"
+        }
+      }
+    ],
+    "ontologyClasses": [
+      {
+        "iri": "http://www.ontologyrepository.com/CommonCoreOntologies/Aircraft",
+        "source": "CCO-S",
+        "version": "1.7.0",
+        "citation": "",
+        "classification": "UNCLASSIFIED",
+        "name": "Aircraft",
+        "description": "",
+        "aliases": [],
+        "superclassIris": [
+          "http://www.ontologyrepository.com/CommonCoreOntologies/Vehicle"
+        ],
+        "defaultIfc": null,
+        "defaultSymbolIdCode": "10010100000000000000",
+        "isVisible": true,
+        "domain": "AIR",
+        "isParent": false
+      },
+      {
+        "iri": "http://www.ontologyrepository.com/CommonCoreOntologies/ObjectTrackPoint",
+        "source": "CCO-S",
+        "version": "1.7.0",
+        "citation": "",
+        "classification": "UNCLASSIFIED",
+        "name": "Object Track Point",
+        "description": "",
+        "aliases": [],
+        "superclassIris": [],
+        "defaultIfc": null,
+        "defaultSymbolIdCode": null,
+        "isVisible": true,
+        "domain": "GROUND",
+        "isParent": false
+      }
+    ],
+    "ontologyAttributes": [
+      {
+        "iri": "https://foundry.ai.mil/ontology/4901-001/hasTailNumber",
+        "source": "ATOMS-EXAMPLE",
+        "version": "1.0",
+        "citation": "Example GraphQL Queries.pdf",
+        "classification": "UNCLASSIFIED",
+        "name": "Tail Number",
+        "description": "Aircraft tail number.",
+        "aliases": [],
+        "dataType": "STRING",
+        "isVisible": true,
+        "categories": [
+          "IDENTIFIER"
+        ]
+      }
+    ],
+    "ontologyRelationships": [
+      {
+        "iri": "https://foundry.ai.mil/ontology/4901-001/operatedBy",
+        "source": "ATOMS-EXAMPLE",
+        "version": "1.0",
+        "citation": "Example GraphQL Queries.pdf",
+        "classification": "UNCLASSIFIED",
+        "name": "operated by",
+        "description": "Example relationship from the supplied response.",
+        "aliases": [],
+        "isVisible": true
+      },
+      {
+        "iri": "https://anbconnect.local/ontology/associatedWith",
+        "source": "ANBConnect",
+        "version": "1.0",
+        "citation": "Supplemental deterministic endpoint test",
+        "classification": "UNCLASSIFIED",
+        "name": "associated with",
+        "description": "Supplemental cross-node relationship used to prove link endpoint wiring.",
+        "aliases": [],
+        "isVisible": true
+      }
+    ]
+  }
+}

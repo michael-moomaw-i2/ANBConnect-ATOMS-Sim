@@ -39,6 +39,10 @@ const HOST = process.env.HOST || '0.0.0.0';
 const PORT = Number(process.env.PORT || 4010);
 const GRAPHQL_PATH = process.env.GRAPHQL_PATH || '/graphql';
 const SEED_DEMO_DATA = String(process.env.SEED_DEMO_DATA || 'true').toLowerCase() === 'true';
+const SEED_PROFILE = String(process.env.ATOMS_SIM_SEED_PROFILE || 'example-nodes').trim().toLowerCase();
+const EXAMPLE_FIXTURE_FILE = process.env.ATOMS_SIM_EXAMPLE_FIXTURE_FILE
+  ? path.resolve(process.env.ATOMS_SIM_EXAMPLE_FIXTURE_FILE)
+  : path.join(__dirname, 'fixtures', 'example-nodes-store.json');
 const HTTPS_ENABLED = String(process.env.HTTPS_ENABLED || 'false').toLowerCase() === 'true';
 const HTTPS_CERT_FILE = process.env.HTTPS_CERT_FILE || '';
 const HTTPS_KEY_FILE = process.env.HTTPS_KEY_FILE || '';
@@ -340,6 +344,81 @@ function matchesContains(value, containsQuery) {
   return v.includes(needle);
 }
 
+function matchesStringQuery(value, query) {
+  if (!query || typeof query !== 'object') return true;
+  const actual = String(value ?? '');
+  const folded = actual.toLowerCase();
+  if (query.equals != null && folded !== String(query.equals).toLowerCase()) return false;
+  if (query.notEquals != null && folded === String(query.notEquals).toLowerCase()) return false;
+  if (query.contains != null) {
+    const normalized = normalizeContainsQuery({ contains: String(query.contains) });
+    if (!matchesContains(actual, normalized)) return false;
+  }
+  if (query.notContains != null) {
+    const normalized = normalizeContainsQuery({ contains: String(query.notContains) });
+    if (matchesContains(actual, normalized)) return false;
+  }
+  if (Array.isArray(query.and) && !query.and.every((q) => matchesStringQuery(value, q))) return false;
+  if (Array.isArray(query.or) && query.or.length > 0 && !query.or.some((q) => matchesStringQuery(value, q))) return false;
+  return true;
+}
+
+function matchesEnumQuery(value, query) {
+  if (!query || typeof query !== 'object') return true;
+  const actual = String(value ?? '').toUpperCase();
+  if (query.is != null && actual !== String(query.is).toUpperCase()) return false;
+  if (query.not != null && actual === String(query.not).toUpperCase()) return false;
+  if (Array.isArray(query.any) && query.any.length > 0 && !query.any.some((x) => actual === String(x).toUpperCase())) return false;
+  if (Array.isArray(query.none) && query.none.some((x) => actual === String(x).toUpperCase())) return false;
+  return true;
+}
+
+function matchesAnyList(actualValues, requestedValues) {
+  if (!Array.isArray(requestedValues) || requestedValues.length === 0) return true;
+  const actual = new Set(ensureArray(actualValues).map((x) => String(x).toLowerCase()));
+  return requestedValues.some((x) => actual.has(String(x).toLowerCase()));
+}
+
+function compareNullable(a, b) {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  if (typeof a === 'number' && typeof b === 'number') return a - b;
+  return String(a).localeCompare(String(b), undefined, { sensitivity: 'base', numeric: true });
+}
+
+function applyPageParams(items, pageParams) {
+  let output = Array.isArray(items) ? [...items] : [];
+  const sorts = Array.isArray(pageParams?.sortParams) ? pageParams.sortParams : [];
+  if (sorts.length > 0) {
+    output.sort((left, right) => {
+      for (const sort of sorts) {
+        const field = String(sort?.field || '').trim();
+        if (!field) continue;
+        let cmp = compareNullable(left?.[field], right?.[field]);
+        if (String(sort?.direction || 'ASC').toUpperCase().startsWith('DESC')) cmp *= -1;
+        if (cmp !== 0) return cmp;
+      }
+      return 0;
+    });
+  }
+  const page = Math.max(1, Number(pageParams?.page || 1));
+  const pageSize = Math.max(1, Number(pageParams?.pageSize || output.length || 100));
+  const start = (page - 1) * pageSize;
+  return output.slice(start, start + pageSize);
+}
+
+function makePage(items, pageParams) {
+  const all = Array.isArray(items) ? items : [];
+  const data = applyPageParams(all, pageParams);
+  return {
+    totalSize: all.length,
+    totalSizeExceeded: false,
+    rollupAcm: all.length ? makeRollupAcm() : null,
+    data,
+  };
+}
+
 // -----------------------------
 // In-memory data store
 // -----------------------------
@@ -351,10 +430,10 @@ const db = {
   nodes: new Map(),
   attributes: new Map(),
   observations: new Map(),
-  activities: new Map(),
   relationships: new Map(),
-  comments: new Map(),
-  assessments: new Map(),
+  ontologyClasses: new Map(),
+  ontologyAttributes: new Map(),
+  ontologyRelationships: new Map(),
 };
 
 const STORE_COLLECTIONS = [
@@ -364,10 +443,10 @@ const STORE_COLLECTIONS = [
   'nodes',
   'attributes',
   'observations',
-  'activities',
   'relationships',
-  'comments',
-  'assessments',
+  'ontologyClasses',
+  'ontologyAttributes',
+  'ontologyRelationships',
 ];
 
 function storeCounts() {
@@ -386,7 +465,8 @@ function serializeStore(reason = 'save') {
     data[name] = Array.from(db[name].values());
   }
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
+    seedProfile: SEED_PROFILE,
     savedUtc: nowIso(),
     counts: storeCounts(),
     data,
@@ -427,7 +507,8 @@ function loadStore() {
       db[name].clear();
       const rows = Array.isArray(data[name]) ? data[name] : [];
       for (const row of rows) {
-        if (row && row.id) db[name].set(row.id, row);
+        const key = row && (row.id || row.iri);
+        if (key) db[name].set(String(key), row);
       }
     }
     console.log(`[atoms-sim] loaded store ${JSON.stringify(storeCounts())} <- ${STORE_FILE}`);
@@ -470,105 +551,12 @@ function deriveNameFromIri(iri) {
   return parts.length ? parts[parts.length - 1] : s;
 }
 
-
-function fail(message, details = {}) {
-  const err = new Error(message);
-  err.extensions = {
-    code: 'BAD_USER_INPUT',
-    details,
-  };
-  throw err;
-}
-
-function requireExisting(map, id, label, fieldName) {
-  if (!id || !map.has(id)) {
-    fail(`${label} not found`, { field: fieldName, id: id || null });
-  }
-}
-
-function requireUpdateTarget(existing, label, id) {
-  if (!existing) fail(`${label} not found for update`, { id: id || null });
-}
-
-function objectMapForType(objectType) {
-  switch (String(objectType || '').toUpperCase()) {
-    case 'ORIGINATOR': return db.originators;
-    case 'PROVIDER': return db.providers;
-    case 'SOURCE': return db.sources;
-    case 'NODE': return db.nodes;
-    case 'ATTRIBUTE': return db.attributes;
-    case 'OBSERVATION': return db.observations;
-    case 'ACTIVITY': return db.activities;
-    case 'RELATIONSHIP': return db.relationships;
-    case 'COMMENT': return db.comments;
-    case 'ASSESSMENT': return db.assessments;
-    default: return null;
-  }
-}
-
-function requireTargetObject(targetObjectType, targetObjectId) {
-  const map = objectMapForType(targetObjectType);
-  if (!map) fail('Unsupported targetObjectType', { targetObjectType });
-  requireExisting(map, targetObjectId, `${targetObjectType} target object`, 'targetObjectId');
-}
-
-function validateProviderInput(input) {
-  requireExisting(db.originators, input.originatorId, 'Originator', 'originatorId');
-}
-
-function validateSourceInput(input) {
-  requireExisting(db.providers, input.providerId, 'Provider', 'providerId');
-}
-
-function validateAttributeInput(input) {
-  requireExisting(db.sources, input.sourceId, 'Source', 'sourceId');
-  const associations = [input.nodeId, input.observationId, input.activityId].filter(Boolean);
-  if (associations.length !== 1) {
-    fail('Attribute must be associated with exactly one Node, Observation, or Activity in the simulator', {
-      nodeId: input.nodeId || null,
-      observationId: input.observationId || null,
-      activityId: input.activityId || null,
-    });
-  }
-  if (input.nodeId) requireExisting(db.nodes, input.nodeId, 'Node', 'nodeId');
-  if (input.observationId) requireExisting(db.observations, input.observationId, 'Observation', 'observationId');
-  if (input.activityId) requireExisting(db.activities, input.activityId, 'Activity', 'activityId');
-}
-
-function validateObservationInput(input) {
-  requireExisting(db.sources, input.sourceId, 'Source', 'sourceId');
-  requireExisting(db.nodes, input.nodeId, 'Node', 'nodeId');
-}
-
-function validateActivityInput(input) {
-  if (input.sourceId) requireExisting(db.sources, input.sourceId, 'Source', 'sourceId');
-  requireExisting(db.nodes, input.nodeId, 'Node', 'nodeId');
-  for (const observationId of ensureArray(input.observationIds)) {
-    requireExisting(db.observations, observationId, 'Observation', 'observationIds');
-  }
-}
-
-function validateRelationshipInput(input) {
-  requireExisting(db.nodes, input.startNodeId, 'Start node', 'startNodeId');
-  requireExisting(db.nodes, input.endNodeId, 'End node', 'endNodeId');
-  requireExisting(db.sources, input.sourceId, 'Source', 'sourceId');
-}
-
-function validateCommentInput(input) {
-  requireTargetObject(input.targetObjectType, input.targetObjectId);
-}
-
-function validateAssessmentInput(input) {
-  requireExisting(db.sources, input.sourceId, 'Source', 'sourceId');
-  requireTargetObject(input.targetObjectType, input.targetObjectId);
-}
-
 // -----------------------------
 // ATOMS-ish builders
 // -----------------------------
 
 function buildOriginatorFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   return {
     id,
     version: nextVersion(existing),
@@ -580,7 +568,7 @@ function buildOriginatorFromInput(input, existing) {
 }
 
 function buildProviderFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   return {
     id,
     version: nextVersion(existing),
@@ -595,7 +583,7 @@ function buildProviderFromInput(input, existing) {
 }
 
 function buildSourceFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   return {
     id,
     version: nextVersion(existing),
@@ -617,7 +605,7 @@ function buildSourceFromInput(input, existing) {
 }
 
 function buildNodeFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   const classIri = input.classIri ?? existing?.classIri ?? 'https://example.invalid/Unknown';
   return {
     id,
@@ -650,7 +638,7 @@ function buildNodeFromInput(input, existing) {
 }
 
 function buildAttributeFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   const iri = input.attributeIri ?? existing?.attributeIri ?? 'https://example.invalid/attr';
   return {
     id,
@@ -691,7 +679,7 @@ function buildAttributeFromInput(input, existing) {
 }
 
 function buildRelationshipFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   const iri = input.objectPropertyIri ?? existing?.objectPropertyIri ?? 'https://example.invalid/rel';
   return {
     id,
@@ -713,9 +701,8 @@ function buildRelationshipFromInput(input, existing) {
   };
 }
 
-
 function buildObservationFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
+  const id = existing?.id || newUuid();
   const classIri = input.classIri ?? existing?.classIri ?? 'https://example.invalid/Observation';
   return {
     id,
@@ -729,69 +716,39 @@ function buildObservationFromInput(input, existing) {
     confidence: input.confidence ?? existing?.confidence ?? 'UNKNOWN',
     sourceId: input.sourceId ?? existing?.sourceId ?? null,
     nodeId: input.nodeId ?? existing?.nodeId ?? null,
-    geometry: input.geometry ?? existing?.geometry ?? null,
+    geometry: input.geometry ?? existing?.geometry ?? { type: 'Point', coordinates: [0, 0, 0] },
     startTime: input.startTime ?? existing?.startTime ?? null,
     endTime: input.endTime ?? existing?.endTime ?? null,
     lastVerified: makeVerification(),
   };
 }
 
-function buildActivityFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
-  const classIri = input.classIri ?? existing?.classIri ?? 'https://example.invalid/Activity';
-  return {
-    id,
-    version: nextVersion(existing),
-    acm: input.acm ?? existing?.acm ?? makeRollupAcm(),
-    tags: ensureArray(input.tags ?? existing?.tags),
-    labels: ensureArray(input.labels ?? existing?.labels),
-    classIri,
-    className: existing?.className ?? deriveNameFromIri(classIri),
-    name: input.name ?? existing?.name ?? 'Unnamed Activity',
-    description: input.description ?? existing?.description ?? null,
-    state: input.state ?? existing?.state ?? 'UNKNOWN',
-    sourceId: input.sourceId ?? existing?.sourceId ?? null,
-    nodeId: input.nodeId ?? existing?.nodeId ?? null,
-    observationIds: ensureArray(input.observationIds ?? existing?.observationIds),
-    startTime: input.startTime ?? existing?.startTime ?? nowIso(),
-    endTime: input.endTime ?? existing?.endTime ?? nowIso(),
-    lastVerified: makeVerification(),
-  };
+function clearStoreMaps() {
+  for (const name of STORE_COLLECTIONS) db[name].clear();
 }
 
-function buildCommentFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
-  return {
-    id,
-    version: nextVersion(existing),
-    acm: input.acm ?? existing?.acm ?? makeRollupAcm(),
-    tags: ensureArray(input.tags ?? existing?.tags),
-    targetObjectId: input.targetObjectId ?? existing?.targetObjectId ?? null,
-    targetObjectType: input.targetObjectType ?? existing?.targetObjectType ?? 'NODE',
-    owner: existing?.owner ?? 'atoms-sim',
-    timeOfComment: existing?.timeOfComment ?? nowIso(),
-    contentType: input.contentType ?? existing?.contentType ?? 'text',
-    contentBody: input.contentBody ?? existing?.contentBody ?? '',
-  };
+function loadFixtureFile(filePath, reason = 'fixture') {
+  const resolved = path.resolve(filePath);
+  const parsed = JSON.parse(fs.readFileSync(resolved, 'utf8'));
+  const data = parsed && parsed.data ? parsed.data : parsed;
+  clearStoreMaps();
+  for (const name of STORE_COLLECTIONS) {
+    const rows = Array.isArray(data?.[name]) ? data[name] : [];
+    for (const row of rows) {
+      const key = row && (row.id || row.iri);
+      if (key) db[name].set(String(key), row);
+    }
+  }
+  console.log(`[atoms-sim] loaded ${reason} ${JSON.stringify(storeCounts())} <- ${resolved}`);
+  return true;
 }
 
-function buildAssessmentFromInput(input, existing) {
-  const id = existing?.id || input.id || newUuid();
-  return {
-    id,
-    version: nextVersion(existing),
-    acm: input.acm ?? existing?.acm ?? makeRollupAcm(),
-    tags: ensureArray(input.tags ?? existing?.tags),
-    targetObjectId: input.targetObjectId ?? existing?.targetObjectId ?? null,
-    targetObjectType: input.targetObjectType ?? existing?.targetObjectType ?? 'NODE',
-    sourceId: input.sourceId ?? existing?.sourceId ?? null,
-    owner: existing?.owner ?? 'atoms-sim',
-    timeOfAssessment: existing?.timeOfAssessment ?? nowIso(),
-    contentType: input.contentType ?? existing?.contentType ?? 'text',
-    contentBody: input.contentBody ?? existing?.contentBody ?? '',
-    confidence: input.confidence ?? existing?.confidence ?? 'UNKNOWN',
-    likelihood: input.likelihood ?? existing?.likelihood ?? 0.01,
-  };
+function seedConfiguredData() {
+  if (SEED_PROFILE === 'example-nodes' || SEED_PROFILE === 'pdf-example-nodes-v1') {
+    return loadFixtureFile(EXAMPLE_FIXTURE_FILE, 'example-nodes fixture');
+  }
+  seedDemoData();
+  return true;
 }
 
 function seedDemoData() {
@@ -859,8 +816,41 @@ function seedDemoData() {
 
 const loadedPersistedStore = loadStore();
 if (!loadedPersistedStore && SEED_DEMO_DATA) {
-  seedDemoData();
-  saveStore('seed');
+  seedConfiguredData();
+  saveStore(`seed:${SEED_PROFILE}`);
+}
+
+function objectHasTag(row, tag) {
+  if (!row || !tag) return false;
+  return ensureArray(row.tags).some((value) => String(value).toLowerCase() === String(tag).toLowerCase());
+}
+
+function purgeTaggedData(tag) {
+  const targetTag = String(tag || '').trim();
+  if (!targetTag) return false;
+
+  const removed = {};
+  const removedNodeIds = new Set();
+  const removedSourceIds = new Set();
+  for (const name of ['attributes', 'observations', 'relationships', 'nodes', 'sources', 'providers', 'originators']) {
+    removed[name] = 0;
+    for (const [id, row] of Array.from(db[name].entries())) {
+      let remove = objectHasTag(row, targetTag);
+      if (!remove && name === 'attributes') remove = removedNodeIds.has(row.nodeId) || removedSourceIds.has(row.sourceId);
+      if (!remove && name === 'observations') remove = removedNodeIds.has(row.nodeId) || removedSourceIds.has(row.sourceId);
+      if (!remove && name === 'relationships') remove = removedNodeIds.has(row.startNodeId) || removedNodeIds.has(row.endNodeId) || removedSourceIds.has(row.sourceId);
+      if (!remove && name === 'sources') remove = objectHasTag(row, targetTag);
+      if (!remove) continue;
+
+      db[name].delete(id);
+      removed[name] += 1;
+      if (name === 'nodes') removedNodeIds.add(id);
+      if (name === 'sources') removedSourceIds.add(id);
+    }
+  }
+  saveStore(`purge:${targetTag}`);
+  console.log(`[atoms-sim] purgeTaggedData tag=${targetTag} removed ${JSON.stringify(removed)}`);
+  return true;
 }
 
 // -----------------------------
@@ -877,6 +867,107 @@ const resolvers = {
   Date: DateScalar,
   UUID: UUIDScalar,
   Long: LongScalar,
+
+  Node: {
+    audits: () => makePage([]),
+    history: (node, { filter }) => makePage(node ? [node] : [], filter?.pageParams),
+    attributes: (node, { filter }) => {
+      let items = listAll(db.attributes).filter((a) => a.nodeId === node.id);
+      if (filter?.tags?.length) items = items.filter((a) => matchesAnyList(a.tags, filter.tags));
+      if (filter?.labels?.length) items = items.filter((a) => matchesAnyList(a.labels, filter.labels));
+      return makePage(items, filter?.pageParams);
+    },
+    observations: (node, { filter }) => {
+      let items = listAll(db.observations).filter((o) => o.nodeId === node.id);
+      if (filter?.tags?.length) items = items.filter((o) => matchesAnyList(o.tags, filter.tags));
+      if (filter?.labels?.length) items = items.filter((o) => matchesAnyList(o.labels, filter.labels));
+      return makePage(items, filter?.pageParams);
+    },
+    activities: () => makePage([]),
+    assessments: () => makePage([]),
+    relationships: (node, { filter }) => {
+      let items = listAll(db.relationships).filter((r) => r.startNodeId === node.id || r.endNodeId === node.id);
+      if (filter?.tags?.length) items = items.filter((r) => matchesAnyList(r.tags, filter.tags));
+      if (filter?.labels?.length) items = items.filter((r) => matchesAnyList(r.labels, filter.labels));
+      return makePage(items, filter?.pageParams);
+    },
+    objectLists: () => makePage([]),
+    comments: () => makePage([]),
+    ontologyClass: (node) => getById(db.ontologyClasses, node.classIri),
+    nodeChanges: () => makePage([]),
+    permissions: (node) => node.permissions || ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    latestKnownLocation: (node) => {
+      const items = listAll(db.observations)
+        .filter((o) => o.nodeId === node.id)
+        .sort((a, b) => String(b.endTime || b.startTime || '').localeCompare(String(a.endTime || a.startTime || '')));
+      return items[0] || null;
+    },
+    lastVerified: (node) => node.lastVerified || makeVerification(),
+    custodyStatus: (node) => node.custodyStatus || makeCustodyStatus(),
+    trackProvider: (node) => node.trackProviderId ? getById(db.providers, node.trackProviderId) : null,
+    tickets: () => makePage([]),
+  },
+
+  Attribute: {
+    audits: () => makePage([]),
+    history: (attribute, { filter }) => makePage(attribute ? [attribute] : [], filter?.pageParams),
+    source: (attribute) => getById(db.sources, attribute.sourceId),
+    node: (attribute) => attribute.nodeId ? getById(db.nodes, attribute.nodeId) : null,
+    observation: (attribute) => attribute.observationId ? getById(db.observations, attribute.observationId) : null,
+    activity: () => null,
+    comments: () => makePage([]),
+    assessments: () => makePage([]),
+    ontologyAttribute: (attribute) => getById(db.ontologyAttributes, attribute.attributeIri),
+    lastVerified: (attribute) => attribute.lastVerified || makeVerification(),
+  },
+
+  Observation: {
+    audits: () => makePage([]),
+    history: (observation, { filter }) => makePage(observation ? [observation] : [], filter?.pageParams),
+    source: (observation) => getById(db.sources, observation.sourceId),
+    node: (observation) => getById(db.nodes, observation.nodeId),
+    activities: () => makePage([]),
+    attributes: (observation, { filter }) => makePage(listAll(db.attributes).filter((a) => a.observationId === observation.id), filter?.pageParams),
+    assessments: () => makePage([]),
+    ontologyClass: (observation) => getById(db.ontologyClasses, observation.classIri),
+    lastVerified: (observation) => observation.lastVerified || makeVerification(),
+  },
+
+  Relationship: {
+    audits: () => makePage([]),
+    history: (relationship, { filter }) => makePage(relationship ? [relationship] : [], filter?.pageParams),
+    startNode: (relationship) => getById(db.nodes, relationship.startNodeId),
+    endNode: (relationship) => getById(db.nodes, relationship.endNodeId),
+    source: (relationship) => getById(db.sources, relationship.sourceId),
+    comments: () => makePage([]),
+    assessments: () => makePage([]),
+    ontologyRelationship: (relationship) => getById(db.ontologyRelationships, relationship.objectPropertyIri),
+    lastVerified: (relationship) => relationship.lastVerified || makeVerification(),
+  },
+
+  Source: {
+    audits: () => makePage([]),
+    history: (source, { filter }) => makePage(source ? [source] : [], filter?.pageParams),
+    provider: (source) => getById(db.providers, source.providerId),
+    attributes: (source, { filter }) => makePage(listAll(db.attributes).filter((a) => a.sourceId === source.id), filter?.pageParams),
+    assessments: () => makePage([]),
+    observations: (source, { filter }) => makePage(listAll(db.observations).filter((o) => o.sourceId === source.id), filter?.pageParams),
+    activities: () => makePage([]),
+    relationships: (source, { filter }) => makePage(listAll(db.relationships).filter((r) => r.sourceId === source.id), filter?.pageParams),
+    lastVerified: (source) => source.lastVerified || makeVerification(),
+  },
+
+  Provider: {
+    originator: (provider) => provider.originatorId ? getById(db.originators, provider.originatorId) : null,
+  },
+
+  OntologyClass: {
+    parentOntologyClasses: () => [],
+    childOntologyClasses: () => [],
+    ancestorOntologyClasses: () => [],
+    isVisible: (item) => item.isVisible !== false,
+    isParent: (item) => !!item.isParent,
+  },
 
   Query: {
     greeting: () => 'ATOMS simulator is running',
@@ -932,13 +1023,25 @@ const resolvers = {
     nodes: (_, { query }) => {
       let items = listAll(db.nodes);
       if (query?.ids?.length) items = items.filter((n) => query.ids.includes(n.id));
-      const nameContains = normalizeContainsQuery(query?.name);
-      if (nameContains) items = items.filter((n) => matchesContains(n.name, nameContains));
+      if (query?.tags?.length) items = items.filter((n) => matchesAnyList(n.tags, query.tags));
+      if (query?.labels?.length) items = items.filter((n) => matchesAnyList(n.labels, query.labels));
+      if (query?.eoids?.length) items = items.filter((n) => query.eoids.includes(n.eoid));
+      if (query?.guideIds?.length) items = items.filter((n) => query.guideIds.includes(n.guideId));
+      if (query?.name) items = items.filter((n) => matchesStringQuery(n.name, query.name));
+      if (query?.tier) items = items.filter((n) => matchesEnumQuery(n.tier, query.tier));
+      if (query?.domain) items = items.filter((n) => matchesEnumQuery(n.domain, query.domain));
       if (query?.classIris?.length) items = items.filter((n) => query.classIris.includes(n.classIri));
+      if (query?.className) items = items.filter((n) => matchesStringQuery(n.className, query.className));
+      if (query?.symbolIdCodes?.length) items = items.filter((n) => query.symbolIdCodes.includes(n.symbolIdCode));
+      if (query?.allegiances?.length) items = items.filter((n) => query.allegiances.includes(n.allegiance));
+      if (query?.allegianceAors?.length) items = items.filter((n) => query.allegianceAors.includes(n.allegianceAor));
+      if (query?.currentAors?.length) items = items.filter((n) => query.currentAors.includes(n.currentAor));
+      if (query?.aors?.length) items = items.filter((n) => query.aors.includes(n.currentAor) || query.aors.includes(n.allegianceAor));
+      if (typeof query?.isNso === 'boolean') items = items.filter((n) => n.isNso === query.isNso);
       console.log(`[atoms-sim] nodes query returned ${items.length}`);
-      return makeEmptyPage(items);
+      return makePage(items, query?.pageParams);
     },
-    nodeHistory: () => makeEmptyPage([]),
+    nodeHistory: () => makePage([]),
 
     // Attributes
     attribute: (_, { query }) => getById(db.attributes, query.id),
@@ -955,80 +1058,74 @@ const resolvers = {
       if (attributeDisplayValueContains) items = items.filter((a) => matchesContains(a.attributeDisplayValue, attributeDisplayValueContains));
       const attributeNormalizedValueContains = normalizeContainsQuery(query?.attributeNormalizedValue);
       if (attributeNormalizedValueContains) items = items.filter((a) => matchesContains(a.attributeNormalizedValue, attributeNormalizedValueContains));
+      if (query?.tags?.length) items = items.filter((a) => matchesAnyList(a.tags, query.tags));
+      if (query?.labels?.length) items = items.filter((a) => matchesAnyList(a.labels, query.labels));
       console.log(`[atoms-sim] attributes query returned ${items.length}`);
-      return makeEmptyPage(items);
+      return makePage(items, query?.pageParams);
     },
-    attributeHistory: () => makeEmptyPage([]),
+    attributeHistory: () => makePage([]),
 
     // Observations
     observation: (_, { query }) => getById(db.observations, query.id),
     observations: (_, { query }) => {
       let items = listAll(db.observations);
       if (query?.ids?.length) items = items.filter((o) => query.ids.includes(o.id));
+      if (query?.tags?.length) items = items.filter((o) => matchesAnyList(o.tags, query.tags));
+      if (query?.labels?.length) items = items.filter((o) => matchesAnyList(o.labels, query.labels));
+      if (query?.classIris?.in?.length) items = items.filter((o) => query.classIris.in.includes(o.classIri));
+      if (query?.classIris?.notIn?.length) items = items.filter((o) => !query.classIris.notIn.includes(o.classIri));
+      if (query?.className) items = items.filter((o) => matchesStringQuery(o.className, query.className));
+      if (query?.displayValue) items = items.filter((o) => matchesStringQuery(o.displayValue, query.displayValue));
+      if (query?.confidence) items = items.filter((o) => matchesEnumQuery(o.confidence, query.confidence));
       if (query?.sourceIds?.length) items = items.filter((o) => query.sourceIds.includes(o.sourceId));
       if (query?.nodeIds?.in?.length) items = items.filter((o) => query.nodeIds.in.includes(o.nodeId));
-      const displayValueContains = normalizeContainsQuery(query?.displayValue);
-      if (displayValueContains) items = items.filter((o) => matchesContains(o.displayValue, displayValueContains));
+      if (query?.nodeIds?.notIn?.length) items = items.filter((o) => !query.nodeIds.notIn.includes(o.nodeId));
       console.log(`[atoms-sim] observations query returned ${items.length}`);
-      return makeEmptyPage(items);
+      return makePage(items, query?.pageParams);
     },
-    observationHistory: () => makeEmptyPage([]),
-
-    // Activities
-    activity: (_, { query }) => getById(db.activities, query.id),
-    activities: (_, { query }) => {
-      let items = listAll(db.activities);
-      if (query?.ids?.length) items = items.filter((a) => query.ids.includes(a.id));
-      if (query?.sourceIds?.length) items = items.filter((a) => query.sourceIds.includes(a.sourceId));
-      if (query?.nodeIds?.in?.length) items = items.filter((a) => query.nodeIds.in.includes(a.nodeId));
-      const nameContains = normalizeContainsQuery(query?.name);
-      if (nameContains) items = items.filter((a) => matchesContains(a.name, nameContains));
-      console.log(`[atoms-sim] activities query returned ${items.length}`);
-      return makeEmptyPage(items);
-    },
-    activityHistory: () => makeEmptyPage([]),
+    observationHistory: () => makePage([]),
 
     // Relationships
     relationship: (_, { query }) => getById(db.relationships, query.id),
     relationships: (_, { query }) => {
       let items = listAll(db.relationships);
       if (query?.ids?.length) items = items.filter((r) => query.ids.includes(r.id));
+      if (query?.tags?.length) items = items.filter((r) => matchesAnyList(r.tags, query.tags));
+      if (query?.labels?.length) items = items.filter((r) => matchesAnyList(r.labels, query.labels));
       if (query?.sourceIds?.length) items = items.filter((r) => query.sourceIds.includes(r.sourceId));
-      const nameContains = normalizeContainsQuery(query?.name);
-      if (nameContains) items = items.filter((r) => matchesContains(r.name, nameContains));
-      const objectPropertyNameContains = normalizeContainsQuery(query?.objectPropertyName);
-      if (objectPropertyNameContains) items = items.filter((r) => matchesContains(r.objectPropertyName, objectPropertyNameContains));
+      if (query?.name) items = items.filter((r) => matchesStringQuery(r.name, query.name));
+      if (query?.objectPropertyIris?.length) items = items.filter((r) => query.objectPropertyIris.includes(r.objectPropertyIri));
+      if (query?.objectPropertyName) items = items.filter((r) => matchesStringQuery(r.objectPropertyName, query.objectPropertyName));
+      const nodeQuery = query?.nodes;
+      if (nodeQuery?.nodeIds?.length) items = items.filter((r) => nodeQuery.nodeIds.includes(r.startNodeId) || nodeQuery.nodeIds.includes(r.endNodeId));
+      if (nodeQuery?.startNodeIds?.length) items = items.filter((r) => nodeQuery.startNodeIds.includes(r.startNodeId));
+      if (nodeQuery?.endNodeIds?.length) items = items.filter((r) => nodeQuery.endNodeIds.includes(r.endNodeId));
+      if (query?.confidence) items = items.filter((r) => matchesEnumQuery(r.confidence, query.confidence));
       console.log(`[atoms-sim] relationships query returned ${items.length}`);
-      return makeEmptyPage(items);
+      return makePage(items, query?.pageParams);
     },
-    relationshipHistory: () => makeEmptyPage([]),
+    relationshipHistory: () => makePage([]),
 
-    // Comments
-    comment: (_, { query }) => getById(db.comments, query.id),
-    comments: (_, { query }) => {
-      let items = listAll(db.comments);
-      if (query?.ids?.length) items = items.filter((c) => query.ids.includes(c.id));
-      if (query?.targetObjectIds?.length) items = items.filter((c) => query.targetObjectIds.includes(c.targetObjectId));
-      const bodyContains = normalizeContainsQuery(query?.contentBody);
-      if (bodyContains) items = items.filter((c) => matchesContains(c.contentBody, bodyContains));
-      console.log(`[atoms-sim] comments query returned ${items.length}`);
-      return makeEmptyPage(items);
+    // Ontology lookups used by the safe Query for Nodes preset.
+    ontologyClass: (_, { query }) => getById(db.ontologyClasses, query.iri),
+    ontologyClasses: (_, { query }) => {
+      let items = listAll(db.ontologyClasses);
+      if (query?.name) items = items.filter((x) => matchesStringQuery(x.name, query.name));
+      return { totalSize: items.length, data: applyPageParams(items, query?.pageParams) };
     },
-    commentHistory: () => makeEmptyPage([]),
-
-    // Assessments
-    assessment: (_, { query }) => getById(db.assessments, query.id),
-    assessments: (_, { query }) => {
-      let items = listAll(db.assessments);
-      if (query?.ids?.length) items = items.filter((a) => query.ids.includes(a.id));
-      if (query?.sourceIds?.length) items = items.filter((a) => query.sourceIds.includes(a.sourceId));
-      if (query?.targetObjectIds?.length) items = items.filter((a) => query.targetObjectIds.includes(a.targetObjectId));
-      const bodyContains = normalizeContainsQuery(query?.contentBody);
-      if (bodyContains) items = items.filter((a) => matchesContains(a.contentBody, bodyContains));
-      console.log(`[atoms-sim] assessments query returned ${items.length}`);
-      return makeEmptyPage(items);
+    ontologyAttribute: (_, { query }) => getById(db.ontologyAttributes, query.iri),
+    ontologyAttributes: (_, { query }) => {
+      let items = listAll(db.ontologyAttributes);
+      if (query?.name) items = items.filter((x) => matchesStringQuery(x.name, query.name));
+      return { totalSize: items.length, data: applyPageParams(items, query?.pageParams) };
     },
-    assessmentHistory: () => makeEmptyPage([]),
+    ontologyRelationship: (_, { query }) => getById(db.ontologyRelationships, query.iri),
+    ontologyRelationships: (_, { query }) => {
+      let items = listAll(db.ontologyRelationships);
+      if (query?.name) items = items.filter((x) => matchesStringQuery(x.name, query.name));
+      return { totalSize: items.length, data: applyPageParams(items, query?.pageParams) };
+    },
+    isValidOntologyResource: (_, { input }) => db.ontologyClasses.has(input.resourceIri) || db.ontologyAttributes.has(input.resourceIri) || db.ontologyRelationships.has(input.resourceIri),
 
     // A couple misc helpers that are handy for UI wiring later
     activityStates: () => ['UNKNOWN', 'ACTIVE', 'INACTIVE'],
@@ -1050,12 +1147,6 @@ const resolvers = {
     },
     updateOriginator: (_, { input }) => {
       const existing = getById(db.originators, input.id);
-      requireUpdateTarget(existing, 'Originator', input.id);
-      const obj = buildOriginatorFromInput(input, existing);
-      return upsert(db.originators, obj, 'originators');
-    },
-    syncOriginator: (_, { input }) => {
-      const existing = getById(db.originators, input.id);
       const obj = buildOriginatorFromInput(input, existing);
       return upsert(db.originators, obj, 'originators');
     },
@@ -1068,22 +1159,11 @@ const resolvers = {
 
     // Providers
     createProvider: (_, { input }) => {
-      validateProviderInput(input);
       const obj = buildProviderFromInput(input);
       return upsert(db.providers, obj, 'providers');
     },
     updateProvider: (_, { input }) => {
       const existing = getById(db.providers, input.id);
-      requireUpdateTarget(existing, 'Provider', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateProviderInput(merged);
-      const obj = buildProviderFromInput(input, existing);
-      return upsert(db.providers, obj, 'providers');
-    },
-    syncProvider: (_, { input }) => {
-      const existing = getById(db.providers, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateProviderInput(merged);
       const obj = buildProviderFromInput(input, existing);
       return upsert(db.providers, obj, 'providers');
     },
@@ -1096,22 +1176,11 @@ const resolvers = {
 
     // Sources
     createSource: (_, { input }) => {
-      validateSourceInput(input);
       const obj = buildSourceFromInput(input);
       return upsert(db.sources, obj, 'sources');
     },
     updateSource: (_, { input }) => {
       const existing = getById(db.sources, input.id);
-      requireUpdateTarget(existing, 'Source', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateSourceInput(merged);
-      const obj = buildSourceFromInput(input, existing);
-      return upsert(db.sources, obj, 'sources');
-    },
-    syncSource: (_, { input }) => {
-      const existing = getById(db.sources, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateSourceInput(merged);
       const obj = buildSourceFromInput(input, existing);
       return upsert(db.sources, obj, 'sources');
     },
@@ -1130,12 +1199,6 @@ const resolvers = {
     },
     updateNode: (_, { input }) => {
       const existing = getById(db.nodes, input.id);
-      requireUpdateTarget(existing, 'Node', input.id);
-      const obj = buildNodeFromInput(input, existing);
-      return upsert(db.nodes, obj, 'nodes');
-    },
-    syncNode: (_, { input }) => {
-      const existing = getById(db.nodes, input.id);
       const obj = buildNodeFromInput(input, existing);
       return upsert(db.nodes, obj, 'nodes');
     },
@@ -1149,22 +1212,11 @@ const resolvers = {
 
     // Attributes
     createAttribute: (_, { input }) => {
-      validateAttributeInput(input);
       const obj = buildAttributeFromInput(input);
       return upsert(db.attributes, obj, 'attributes');
     },
     updateAttribute: (_, { input }) => {
       const existing = getById(db.attributes, input.id);
-      requireUpdateTarget(existing, 'Attribute', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateAttributeInput(merged);
-      const obj = buildAttributeFromInput(input, existing);
-      return upsert(db.attributes, obj, 'attributes');
-    },
-    syncAttribute: (_, { input }) => {
-      const existing = getById(db.attributes, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateAttributeInput(merged);
       const obj = buildAttributeFromInput(input, existing);
       return upsert(db.attributes, obj, 'attributes');
     },
@@ -1178,22 +1230,11 @@ const resolvers = {
 
     // Observations
     createObservation: (_, { input }) => {
-      validateObservationInput(input);
       const obj = buildObservationFromInput(input);
       return upsert(db.observations, obj, 'observations');
     },
     updateObservation: (_, { input }) => {
       const existing = getById(db.observations, input.id);
-      requireUpdateTarget(existing, 'Observation', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateObservationInput(merged);
-      const obj = buildObservationFromInput(input, existing);
-      return upsert(db.observations, obj, 'observations');
-    },
-    syncObservation: (_, { input }) => {
-      const existing = getById(db.observations, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateObservationInput(merged);
       const obj = buildObservationFromInput(input, existing);
       return upsert(db.observations, obj, 'observations');
     },
@@ -1205,53 +1246,13 @@ const resolvers = {
     restoreObservation: () => null,
     verifyObservation: () => true,
 
-    // Activities
-    createActivity: (_, { input }) => {
-      validateActivityInput(input);
-      const obj = buildActivityFromInput(input);
-      return upsert(db.activities, obj, 'activities');
-    },
-    updateActivity: (_, { input }) => {
-      const existing = getById(db.activities, input.id);
-      requireUpdateTarget(existing, 'Activity', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateActivityInput(merged);
-      const obj = buildActivityFromInput(input, existing);
-      return upsert(db.activities, obj, 'activities');
-    },
-    syncActivity: (_, { input }) => {
-      const existing = getById(db.activities, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateActivityInput(merged);
-      const obj = buildActivityFromInput(input, existing);
-      return upsert(db.activities, obj, 'activities');
-    },
-    deleteActivity: (_, { input }) => {
-      const existed = db.activities.delete(input.id);
-      if (existed) saveStore('delete:activities');
-      return existed;
-    },
-    restoreActivity: () => null,
-    verifyActivity: () => true,
-
     // Relationships
     createRelationship: (_, { input }) => {
-      validateRelationshipInput(input);
       const obj = buildRelationshipFromInput(input);
       return upsert(db.relationships, obj, 'relationships');
     },
     updateRelationship: (_, { input }) => {
       const existing = getById(db.relationships, input.id);
-      requireUpdateTarget(existing, 'Relationship', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateRelationshipInput(merged);
-      const obj = buildRelationshipFromInput(input, existing);
-      return upsert(db.relationships, obj, 'relationships');
-    },
-    syncRelationship: (_, { input }) => {
-      const existing = getById(db.relationships, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateRelationshipInput(merged);
       const obj = buildRelationshipFromInput(input, existing);
       return upsert(db.relationships, obj, 'relationships');
     },
@@ -1263,180 +1264,17 @@ const resolvers = {
     restoreRelationship: () => null,
     verifyRelationship: () => true,
 
-    // Comments
-    createComment: (_, { input }) => {
-      validateCommentInput(input);
-      const obj = buildCommentFromInput(input);
-      return upsert(db.comments, obj, 'comments');
-    },
-    updateComment: (_, { input }) => {
-      const existing = getById(db.comments, input.id);
-      requireUpdateTarget(existing, 'Comment', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateCommentInput(merged);
-      const obj = buildCommentFromInput(input, existing);
-      return upsert(db.comments, obj, 'comments');
-    },
-    syncComment: (_, { input }) => {
-      const existing = getById(db.comments, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateCommentInput(merged);
-      const obj = buildCommentFromInput(input, existing);
-      return upsert(db.comments, obj, 'comments');
-    },
-    deleteComment: (_, { input }) => {
-      const existed = db.comments.delete(input.id);
-      if (existed) saveStore('delete:comments');
-      return existed;
-    },
-    restoreComment: () => null,
-
-    // Assessments
-    createAssessment: (_, { input }) => {
-      validateAssessmentInput(input);
-      const obj = buildAssessmentFromInput(input);
-      return upsert(db.assessments, obj, 'assessments');
-    },
-    updateAssessment: (_, { input }) => {
-      const existing = getById(db.assessments, input.id);
-      requireUpdateTarget(existing, 'Assessment', input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateAssessmentInput(merged);
-      const obj = buildAssessmentFromInput(input, existing);
-      return upsert(db.assessments, obj, 'assessments');
-    },
-    syncAssessment: (_, { input }) => {
-      const existing = getById(db.assessments, input.id);
-      const merged = { ...(existing || {}), ...input };
-      validateAssessmentInput(merged);
-      const obj = buildAssessmentFromInput(input, existing);
-      return upsert(db.assessments, obj, 'assessments');
-    },
-    deleteAssessment: (_, { input }) => {
-      const existed = db.assessments.delete(input.id);
-      if (existed) saveStore('delete:assessments');
-      return existed;
-    },
-    restoreAssessment: () => null,
-
     // Misc
     cleanUpSmokeTestData: () => {
-      db.originators.clear();
-      db.providers.clear();
-      db.sources.clear();
-      db.nodes.clear();
-      db.attributes.clear();
-      db.observations.clear();
-      db.activities.clear();
-      db.relationships.clear();
-      db.comments.clear();
-      db.assessments.clear();
-      if (SEED_DEMO_DATA) seedDemoData();
-      saveStore('cleanup');
+      clearStoreMaps();
+      if (SEED_DEMO_DATA) seedConfiguredData();
+      saveStore(`cleanup:${SEED_PROFILE}`);
       return true;
     },
-    purgeTaggedData: () => true,
+    purgeTaggedData: (_, { input }) => purgeTaggedData(input && input.tag),
 
     // Default fallbacks for the rest of the schema (not simulated yet)
     // Returning null is OK for most mutations because return types are nullable.
-  },
-
-  Originator: {
-    providers: (o) => makeEmptyPage(listAll(db.providers).filter((p) => p.originatorId === o.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-  },
-  Provider: {
-    originator: (p) => getById(db.originators, p.originatorId),
-    sources: (p) => makeEmptyPage(listAll(db.sources).filter((s) => s.providerId === p.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-  },
-  Source: {
-    provider: (s) => getById(db.providers, s.providerId),
-    attributes: (s) => makeEmptyPage(listAll(db.attributes).filter((a) => a.sourceId === s.id)),
-    observations: (s) => makeEmptyPage(listAll(db.observations).filter((o) => o.sourceId === s.id)),
-    activities: (s) => makeEmptyPage(listAll(db.activities).filter((a) => a.sourceId === s.id)),
-    relationships: (s) => makeEmptyPage(listAll(db.relationships).filter((r) => r.sourceId === s.id)),
-    assessments: (s) => makeEmptyPage(listAll(db.assessments).filter((a) => a.sourceId === s.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-  },
-  Node: {
-    attributes: (n) => makeEmptyPage(listAll(db.attributes).filter((a) => a.nodeId === n.id)),
-    observations: (n) => makeEmptyPage(listAll(db.observations).filter((o) => o.nodeId === n.id)),
-    activities: (n) => makeEmptyPage(listAll(db.activities).filter((a) => a.nodeId === n.id)),
-    relationships: (n) => makeEmptyPage(listAll(db.relationships).filter((r) => r.startNodeId === n.id || r.endNodeId === n.id)),
-    comments: (n) => makeEmptyPage(listAll(db.comments).filter((c) => c.targetObjectType === 'NODE' && c.targetObjectId === n.id)),
-    assessments: (n) => makeEmptyPage(listAll(db.assessments).filter((a) => a.targetObjectType === 'NODE' && a.targetObjectId === n.id)),
-    tickets: () => makeEmptyPage([]),
-    objectLists: () => makeEmptyPage([]),
-    nodeChanges: () => makeEmptyPage([]),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-    ontologyClass: () => null,
-    latestKnownLocation: (n) => listAll(db.observations).find((o) => o.nodeId === n.id) || null,
-    trackProvider: (n) => n.trackProviderId ? getById(db.providers, n.trackProviderId) : null,
-  },
-  Attribute: {
-    source: (a) => getById(db.sources, a.sourceId),
-    node: (a) => a.nodeId ? getById(db.nodes, a.nodeId) : null,
-    observation: (a) => a.observationId ? getById(db.observations, a.observationId) : null,
-    activity: (a) => a.activityId ? getById(db.activities, a.activityId) : null,
-    comments: (a) => makeEmptyPage(listAll(db.comments).filter((c) => c.targetObjectType === 'ATTRIBUTE' && c.targetObjectId === a.id)),
-    assessments: (a) => makeEmptyPage(listAll(db.assessments).filter((x) => x.targetObjectType === 'ATTRIBUTE' && x.targetObjectId === a.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-    ontologyAttribute: () => null,
-  },
-  Observation: {
-    source: (o) => getById(db.sources, o.sourceId),
-    node: (o) => getById(db.nodes, o.nodeId),
-    activities: (o) => makeEmptyPage(listAll(db.activities).filter((a) => ensureArray(a.observationIds).includes(o.id))),
-    attributes: (o) => makeEmptyPage(listAll(db.attributes).filter((a) => a.observationId === o.id)),
-    assessments: (o) => makeEmptyPage(listAll(db.assessments).filter((a) => a.targetObjectType === 'OBSERVATION' && a.targetObjectId === o.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-    ontologyClass: () => null,
-  },
-  Activity: {
-    source: (a) => a.sourceId ? getById(db.sources, a.sourceId) : null,
-    node: (a) => getById(db.nodes, a.nodeId),
-    observations: (a) => makeEmptyPage(ensureArray(a.observationIds).map((id) => getById(db.observations, id)).filter(Boolean)),
-    attributes: (a) => makeEmptyPage(listAll(db.attributes).filter((x) => x.activityId === a.id)),
-    comments: (a) => makeEmptyPage(listAll(db.comments).filter((c) => c.targetObjectType === 'ACTIVITY' && c.targetObjectId === a.id)),
-    assessments: (a) => makeEmptyPage(listAll(db.assessments).filter((x) => x.targetObjectType === 'ACTIVITY' && x.targetObjectId === a.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-    ontologyClass: () => null,
-  },
-  Relationship: {
-    startNode: (r) => getById(db.nodes, r.startNodeId),
-    endNode: (r) => getById(db.nodes, r.endNodeId),
-    source: (r) => getById(db.sources, r.sourceId),
-    comments: (r) => makeEmptyPage(listAll(db.comments).filter((c) => c.targetObjectType === 'RELATIONSHIP' && c.targetObjectId === r.id)),
-    assessments: (r) => makeEmptyPage(listAll(db.assessments).filter((a) => a.targetObjectType === 'RELATIONSHIP' && a.targetObjectId === r.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-    ontologyRelationship: () => null,
-  },
-  Comment: {
-    targetObject: (c) => {
-      const map = objectMapForType(c.targetObjectType);
-      return map ? getById(map, c.targetObjectId) : null;
-    },
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
-  },
-  Assessment: {
-    source: (a) => getById(db.sources, a.sourceId),
-    targetObject: (a) => {
-      const map = objectMapForType(a.targetObjectType);
-      return map ? getById(map, a.targetObjectId) : null;
-    },
-    comments: (a) => makeEmptyPage(listAll(db.comments).filter((c) => c.targetObjectType === 'ASSESSMENT' && c.targetObjectId === a.id)),
-    audits: () => makeEmptyPage([]),
-    history: () => makeEmptyPage([]),
   },
 };
 
@@ -1464,6 +1302,8 @@ async function main() {
       ok: true,
       service: 'atoms-sim',
       time: nowIso(),
+      seedProfile: SEED_PROFILE,
+      storeCounts: storeCounts(),
       tls: {
         httpsEnabled: HTTPS_ENABLED,
         requestClientCertificate: HTTPS_REQUEST_CLIENT_CERT || HTTPS_REQUIRE_CLIENT_CERT,
